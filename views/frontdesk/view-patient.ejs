@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>View Patient | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded shadow p-6">
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">
+        <i class="fas fa-user"></i> Patient Details
+      </h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <div>
+          <strong>Name:</strong> <%= patient.firstName %> <%= patient.lastName
+          %>
+        </div>
+        <div>
+          <strong>Date of Birth:</strong> <%= new
+          Date(patient.dateOfBirth).toLocaleDateString() %>
+        </div>
+        <div><strong>Gender:</strong> <%= patient.gender %></div>
+        <div><strong>Phone:</strong> <%= patient.phone %></div>
+        <div><strong>Email:</strong> <%= patient.email %></div>
+        <div><strong>Doctor:</strong> <%= patient.doctor_id?.username %></div>
+        <div>
+          <strong>Registered At:</strong> <%= new
+          Date(patient.registeredAt).toLocaleDateString() %>
+        </div>
+      </div>
+
+      <hr class="my-4" />
+
+      <h2 class="text-lg font-semibold mb-2">
+        <i class="fas fa-map-marker-alt"></i> Address
+      </h2>
+      <p class="text-sm text-gray-700">
+        <%= patient.address?.street %>, <%= patient.address?.city %>, <%=
+        patient.address?.state %> <%= patient.address?.zipCode %>, <%=
+        patient.address?.country %>
+      </p>
+
+      <hr class="my-4" />
+
+      <h2 class="text-lg font-semibold mb-2">
+        <i class="fas fa-phone"></i> Emergency Contact
+      </h2>
+      <p class="text-sm text-gray-700">
+        <strong><%= patient.emergencyContact?.name %></strong> (<%=
+        patient.emergencyContact?.relation %>) - <%=
+        patient.emergencyContact?.phone %>
+      </p>
+
+      <% if (patient.bloodType) { %>
+      <hr class="my-4" />
+      <h2 class="text-lg font-semibold mb-2">
+        <i class="fas fa-tint"></i> Blood Type
+      </h2>
+      <p class="text-sm text-gray-700"><%= patient.bloodType %></p>
+      <% } %> <% if (patient.insurance?.provider) { %>
+      <hr class="my-4" />
+      <h2 class="text-lg font-semibold mb-2">
+        <i class="fas fa-file-medical"></i> Insurance
+      </h2>
+      <p class="text-sm text-gray-700">
+        Provider: <%= patient.insurance.provider %> <br />
+        Policy #: <%= patient.insurance.policyNumber %> <br />
+        Group #: <%= patient.insurance.groupNumber %>
+      </p>
+      <% } %> <% if (patient.allergies?.length > 0) { %>
+      <hr class="my-4" />
+      <h2 class="text-lg font-semibold mb-2">
+        <i class="fas fa-exclamation-triangle"></i> Allergies
+      </h2>
+      <ul class="list-disc ml-6 text-sm text-gray-700">
+        <% patient.allergies.forEach(allergy => { %>
+        <li><%= allergy %></li>
+        <% }) %>
+      </ul>
+      <% } %> <% if (patient.currentMedications?.length > 0) { %>
+      <hr class="my-4" />
+      <h2 class="text-lg font-semibold mb-2">
+        <i class="fas fa-pills"></i> Current Medications
+      </h2>
+      <ul class="list-disc ml-6 text-sm text-gray-700">
+        <% patient.currentMedications.forEach(med => { %>
+        <li><%= med.name %> — <%= med.dosage %>, <%= med.frequency %></li>
+        <% }) %>
+      </ul>
+      <% } %> <% if (patient.medicalHistory?.length > 0) { %>
+      <hr class="my-4" />
+      <h2 class="text-lg font-semibold mb-2">
+        <i class="fas fa-notes-medical"></i> Medical History
+      </h2>
+      <ul class="list-disc ml-6 text-sm text-gray-700">
+        <% patient.medicalHistory.forEach(history => { %>
+        <li>
+          <strong><%= history.condition %></strong> - <%= new
+          Date(history.diagnosedDate).toLocaleDateString() %>
+          <br />
+          Notes: <%= history.notes %>
+        </li>
+        <% }) %>
+      </ul>
+      <% } %>
+
+      <div class="mt-6">
+        <a
+          href="/frontdesk/patients"
+          class="inline-block bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded"
+        >
+          <i class="fas fa-arrow-left"></i> Back to Patients
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

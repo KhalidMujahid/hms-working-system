@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Medication | Pharmacy</title>
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body class="bg-gray-100 min-h-screen py-10">
+    <div class="max-w-4xl mx-auto bg-white p-10 rounded-lg shadow-md relative">
+      <!-- Go Back Button -->
+      <a
+        href="javascript:history.back()"
+        class="absolute top-4 left-4 text-green-600 hover:text-green-800 flex items-center gap-1 text-sm font-medium"
+      >
+        <i class="fas fa-arrow-left"></i>
+        Go Back
+      </a>
+
+      <h2
+        class="text-3xl font-bold mb-10 text-gray-800 flex items-center gap-3 justify-center"
+      >
+        <i class="fas fa-pills text-green-600"></i>
+        Add New Medication
+      </h2>
+
+      <form
+        action="/pharmacy/medications/new"
+        method="POST"
+        class="grid grid-cols-1 md:grid-cols-2 gap-6"
+        novalidate
+      >
+        <!-- Medication Name -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-capsules text-gray-500 mr-1"></i> Medication Name
+          </label>
+          <input
+            type="text"
+            name="name"
+            required
+            title="Please enter the medication name"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <!-- Brand -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-tag text-gray-500 mr-1"></i> Brand
+          </label>
+          <input
+            type="text"
+            name="brand"
+            title="Optional brand name"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-layer-group text-gray-500 mr-1"></i> Category
+          </label>
+          <select
+            name="category"
+            required
+            title="Choose the medication category"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          >
+            <option value="">Select Category</option>
+            <option value="Antibiotic">Antibiotic</option>
+            <option value="Analgesic">Analgesic</option>
+            <option value="Antimalarial">Antimalarial</option>
+            <option value="Antipyretic">Antipyretic</option>
+            <option value="Supplement">Supplement</option>
+            <option value="Vaccine">Vaccine</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-align-left text-gray-500 mr-1"></i> Description
+          </label>
+          <textarea
+            name="description"
+            rows="2"
+            title="Short description of the medication"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          ></textarea>
+        </div>
+
+        <!-- Quantity -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-sort-numeric-up text-gray-500 mr-1"></i> Quantity
+          </label>
+          <input
+            type="number"
+            name="quantity"
+            min="1"
+            required
+            title="Enter quantity (must be 1 or more)"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <!-- Unit -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-balance-scale text-gray-500 mr-1"></i> Unit
+          </label>
+          <select
+            name="unit"
+            required
+            title="Select the unit type"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          >
+            <option value="">Select Unit</option>
+            <option value="tablet">Tablet</option>
+            <option value="capsule">Capsule</option>
+            <option value="ml">ml</option>
+            <option value="mg">mg</option>
+            <option value="syrup">Syrup</option>
+            <option value="tube">Tube</option>
+            <option value="patch">Patch</option>
+            <option value="bottle">Bottle</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Batch Number -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-barcode text-gray-500 mr-1"></i> Batch Number
+          </label>
+          <input
+            type="text"
+            name="batchNumber"
+            pattern="^[A-Za-z0-9\-]+$"
+            title="Alphanumeric and hyphens only"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <!-- Price Per Unit -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-money-bill-wave text-gray-500 mr-1"></i> Price per
+            Unit (₦)
+          </label>
+          <input
+            type="number"
+            name="pricePerUnit"
+            step="0.01"
+            min="0"
+            required
+            title="Enter a valid price (₦)"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <!-- Expiry Date -->
+        <div>
+          <label class="block font-semibold mb-1">
+            <i class="fas fa-calendar-alt text-gray-500 mr-1"></i> Expiry Date
+          </label>
+          <input
+            type="date"
+            name="expirationDate"
+            required
+            title="Select a future expiry date"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-span-1 md:col-span-2 pt-4">
+          <button
+            type="submit"
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded w-full md:w-auto flex items-center justify-center gap-2"
+          >
+            <i class="fas fa-save"></i>
+            Save Medication
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

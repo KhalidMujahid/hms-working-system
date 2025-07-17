@@ -1,0 +1,29 @@
+<!-- views/partials/frontdesk-sidebar.ejs -->
+<aside class="w-64 bg-green-700 text-white min-h-screen p-6 hidden md:block">
+  <h2 class="text-2xl font-bold mb-6 text-center">Frontdesk</h2>
+  <nav class="space-y-2">
+    <a
+      href="/frontdesk/dashboard"
+      class="block px-4 py-2 rounded hover:bg-green-800"
+      ><i class="fas fa-home mr-2"></i>Dashboard</a
+    >
+    <a
+      href="/frontdesk/patients"
+      class="block px-4 py-2 rounded hover:bg-green-800"
+      ><i class="fas fa-users mr-2"></i>Patients</a
+    >
+    <a
+      href="/frontdesk/appointments"
+      class="block px-4 py-2 rounded hover:bg-green-800"
+      ><i class="fas fa-calendar-alt mr-2"></i>Appointments</a
+    >
+    <a href="/frontdesk/payments" class="block px-4 py-2 rounded bg-green-800"
+      ><i class="fas fa-money-check-alt mr-2"></i>Payments</a
+    >
+    <a
+      href="/auth/logout"
+      class="block mt-10 px-4 py-2 rounded bg-red-600 hover:bg-red-700"
+      ><i class="fas fa-sign-out-alt mr-2"></i>Logout</a
+    >
+  </nav>
+</aside>

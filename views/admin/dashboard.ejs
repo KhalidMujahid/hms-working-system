@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | EHRMS</title>
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body class="bg-gray-100 text-gray-800">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="w-64 bg-white border-r shadow-lg hidden md:flex flex-col min-h-screen"
+      >
+        <!-- Sidebar Header -->
+        <div class="p-6 border-b flex items-center justify-center">
+          <h2 class="text-xl font-bold text-blue-700 flex items-center gap-2">
+            <i class="fas fa-user-shield text-2xl"></i>
+            <span class="tracking-wide">Admin Panel</span>
+          </h2>
+        </div>
+
+        <!-- Navigation -->
+        <nav
+          class="flex flex-col p-4 space-y-1 text-sm font-medium text-gray-700"
+        >
+          <!-- Dashboard -->
+          <a
+            href="/admin/dashboard"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+          >
+            <span
+              class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+            ></span>
+            <i
+              class="fas fa-home text-base text-blue-600 group-hover:scale-110 transition"
+            ></i>
+            <span>Dashboard</span>
+          </a>
+
+          <!-- Manage Users -->
+          <a
+            href="/admin/manage-users"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+          >
+            <span
+              class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+            ></span>
+            <i
+              class="fas fa-users-cog text-base text-blue-600 group-hover:scale-110 transition"
+            ></i>
+            <span>Manage Users</span>
+          </a>
+
+          <!-- Logs -->
+          <a
+            href="/admin/logs"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+          >
+            <span
+              class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+            ></span>
+            <i
+              class="fas fa-clipboard-list text-base text-blue-600 group-hover:scale-110 transition"
+            ></i>
+            <span>Logs</span>
+          </a>
+
+          <!-- Reports -->
+          <a
+            href="/admin/reports"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+          >
+            <span
+              class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+            ></span>
+            <i
+              class="fas fa-chart-line text-base text-blue-600 group-hover:scale-110 transition"
+            ></i>
+            <span>Reports</span>
+          </a>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-200 my-4"></div>
+
+          <!-- Logout -->
+          <a
+            href="/auth/logout"
+            class="flex items-center gap-3 px-4 py-3 text-red-600 rounded-xl hover:bg-red-50 transition"
+          >
+            <i class="fas fa-sign-out-alt text-base"></i>
+            <span>Logout</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6 bg-gray-50 min-h-screen">
+        <!-- Header -->
+        <div
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10"
+        >
+          <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">
+            Welcome back, Admin
+          </h1>
+          <span class="text-sm text-gray-600 bg-white px-4 py-2 rounded shadow">
+            <i class="far fa-calendar-alt mr-2 text-blue-500"></i>
+            Today: <span id="date"></span>
+          </span>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <!-- Total Users -->
+          <div
+            class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm text-gray-500">Total Users</h3>
+                <p class="text-3xl font-bold text-blue-600 mt-1">
+                  <%= totalUsers %>
+                </p>
+              </div>
+              <i class="fas fa-users text-3xl text-blue-500 opacity-80"></i>
+            </div>
+          </div>
+
+          <!-- Registered Patients -->
+          <div
+            class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm text-gray-500">Registered Patients</h3>
+                <p class="text-3xl font-bold text-green-600 mt-1">
+                  <%= totalPatients %>
+                </p>
+              </div>
+              <i
+                class="fas fa-user-injured text-3xl text-green-500 opacity-80"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Today's Appointments -->
+          <div
+            class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm text-gray-500">Today's Appointments</h3>
+                <p class="text-3xl font-bold text-purple-600 mt-1">
+                  <%= todaysAppointments %>
+                </p>
+              </div>
+              <i
+                class="fas fa-calendar-check text-3xl text-purple-500 opacity-80"
+              ></i>
+            </div>
+          </div>
+
+          <!-- System Logs -->
+          <div
+            class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm text-gray-500">System Logs</h3>
+                <p class="text-3xl font-bold text-red-600 mt-1">
+                  <%= totalLogs %>
+                </p>
+              </div>
+              <i class="fas fa-server text-3xl text-red-500 opacity-80"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments & Activity -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+          <!-- Recent Appointments -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">
+                Recent Appointments
+              </h2>
+              <a
+                href="/admin/reports"
+                class="text-sm text-blue-600 hover:underline"
+                >View All</a
+              >
+            </div>
+            <table class="w-full text-sm">
+              <thead class="text-gray-500 border-b">
+                <tr>
+                  <th class="pb-2 text-left">Patient</th>
+                  <th class="pb-2 text-left">Date</th>
+                  <th class="pb-2 text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentAppointments.forEach(apt => { %>
+                <tr class="border-b hover:bg-gray-50 transition">
+                  <td class="py-2 text-gray-800 font-medium">
+                    <%= apt.patientName %>
+                  </td>
+                  <td class="py-2 text-gray-600">
+                    <%= new Date(apt.date).toLocaleDateString() %>
+                  </td>
+                  <td class="py-2 text-green-600 font-semibold">
+                    <%= apt.status %>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">
+                Recent Activity
+              </h2>
+              <a
+                href="/admin/logs"
+                class="text-sm text-blue-600 hover:underline"
+                >View Logs</a
+              >
+            </div>
+            <ul class="space-y-4 text-sm">
+              <% activityLogs.forEach(log => { %>
+              <li class="border-b pb-3">
+                <p>
+                  <span class="font-semibold text-gray-800"
+                    ><%= log.username %></span
+                  >
+                  <span class="text-gray-500">- <%= log.action %></span>
+                </p>
+                <p class="text-xs text-gray-400">
+                  <%= new Date(log.log_time).toLocaleString() %>
+                </p>
+              </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-12">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">
+            Appointments Trend
+          </h2>
+          <canvas id="appointmentsChart" height="100"></canvas>
+        </div>
+
+        <!-- Notifications -->
+        <div class="bg-white rounded-2xl shadow-md p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">
+            System Notifications
+          </h2>
+          <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
+            <li>New patient registration module update completed.</li>
+            <li>
+              Security patch applied on <%= new Date().toLocaleDateString() %>.
+            </li>
+            <li>Daily backup successful.</li>
+          </ul>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.getElementById("date").textContent =
+        new Date().toLocaleDateString();
+    </script>
+  </body>
+</html>

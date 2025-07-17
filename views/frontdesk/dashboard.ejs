@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Frontdesk Dashboard | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-blue-800 text-white p-6 flex flex-col">
+      <h2 class="text-2xl font-bold mb-6 text-center">Frontdesk</h2>
+      <a
+        href="/frontdesk/dashboard"
+        class="flex items-center gap-2 p-2 mb-2 bg-blue-900 rounded"
+      >
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+      <a
+        href="/frontdesk/appointments"
+        class="flex items-center gap-2 p-2 mb-2 hover:bg-blue-700 rounded"
+      >
+        <i class="fas fa-calendar-check"></i> Appointments
+      </a>
+      <a
+        href="/frontdesk/patients"
+        class="flex items-center gap-2 p-2 mb-2 hover:bg-blue-700 rounded"
+      >
+        <i class="fas fa-user-injured"></i> Patients
+      </a>
+      <a
+        href="/frontdesk/payments"
+        class="flex items-center gap-2 p-2 mb-2 hover:bg-blue-700 rounded"
+      >
+        <i class="fas fa-credit-card"></i> Payments
+      </a>
+      <a
+        href="/auth/logout"
+        class="mt-auto flex items-center gap-2 p-2 bg-red-600 hover:bg-red-700 rounded"
+      >
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+          Welcome, <%= user.firstName %> <%= user.lastName %>
+        </h1>
+        <span class="text-sm text-gray-500">Today: <%= today %></span>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Registered Patients</h3>
+          <p class="text-2xl font-bold text-gray-700"><%= patientCount %></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Today's Appointments</h3>
+          <p class="text-2xl font-bold text-gray-700">
+            <%= todayAppointments %>
+          </p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Pending Bills</h3>
+          <p class="text-2xl font-bold text-red-500"><%= pendingPayments %></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Total Payments Today</h3>
+          <p class="text-2xl font-bold text-green-600">
+            ₦<%= totalPaymentsToday %>
+          </p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

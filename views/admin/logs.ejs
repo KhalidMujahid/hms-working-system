@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Logs | EHRMS Admin</title>
+
+    <!-- TailwindCSS CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body class="bg-gray-100 text-gray-800 flex min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      class="w-64 bg-white border-r shadow-lg hidden md:flex flex-col min-h-screen"
+    >
+      <!-- Sidebar Header -->
+      <div class="p-6 border-b flex items-center justify-center">
+        <h2 class="text-xl font-bold text-blue-700 flex items-center gap-2">
+          <i class="fas fa-user-shield text-2xl"></i>
+          <span class="tracking-wide">Admin Panel</span>
+        </h2>
+      </div>
+
+      <!-- Navigation -->
+      <nav
+        class="flex flex-col p-4 space-y-1 text-sm font-medium text-gray-700"
+      >
+        <!-- Dashboard -->
+        <a
+          href="/admin/dashboard"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+        >
+          <span
+            class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+          ></span>
+          <i
+            class="fas fa-home text-base text-blue-600 group-hover:scale-110 transition"
+          ></i>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- Manage Users -->
+        <a
+          href="/admin/manage-users"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+        >
+          <span
+            class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+          ></span>
+          <i
+            class="fas fa-users-cog text-base text-blue-600 group-hover:scale-110 transition"
+          ></i>
+          <span>Manage Users</span>
+        </a>
+
+        <!-- Logs -->
+        <a
+          href="/admin/logs"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+        >
+          <span
+            class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+          ></span>
+          <i
+            class="fas fa-clipboard-list text-base text-blue-600 group-hover:scale-110 transition"
+          ></i>
+          <span>Logs</span>
+        </a>
+
+        <!-- Reports -->
+        <a
+          href="/admin/reports"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-blue-50 hover:text-blue-700 group relative"
+        >
+          <span
+            class="absolute left-0 h-full w-1 bg-blue-600 rounded-r opacity-0 group-hover:opacity-100 transition"
+          ></span>
+          <i
+            class="fas fa-chart-line text-base text-blue-600 group-hover:scale-110 transition"
+          ></i>
+          <span>Reports</span>
+        </a>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200 my-4"></div>
+
+        <!-- Logout -->
+        <a
+          href="/auth/logout"
+          class="flex items-center gap-3 px-4 py-3 text-red-600 rounded-xl hover:bg-red-50 transition"
+        >
+          <i class="fas fa-sign-out-alt text-base"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 bg-gray-50 min-h-screen">
+      <!-- Header -->
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6"
+      >
+        <h1 class="text-3xl font-extrabold text-gray-800">System Logs</h1>
+        <span class="text-sm text-gray-500 mt-2 sm:mt-0"
+          >Updated: <span id="date"></span
+        ></span>
+      </div>
+
+      <!-- Search and Filters -->
+      <div
+        class="bg-white rounded-xl shadow p-4 mb-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between"
+      >
+        <input
+          type="text"
+          id="logSearch"
+          placeholder="Search by user or action..."
+          class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+
+        <div class="flex flex-wrap gap-4 items-center">
+          <!-- Log Type Filter -->
+          <select
+            id="typeFilter"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          >
+            <option value="">All Types</option>
+            <option value="info">Info</option>
+            <option value="warning">Warning</option>
+            <option value="error">Error</option>
+          </select>
+
+          <!-- Date Filter -->
+          <input
+            type="date"
+            id="dateFilter"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+      </div>
+
+      <!-- Logs Table -->
+      <div class="bg-white rounded-xl shadow p-4 overflow-x-auto">
+        <table id="logsTable" class="min-w-full text-sm text-gray-800">
+          <thead class="text-xs uppercase text-gray-600 bg-gray-100 border-b">
+            <tr>
+              <th class="px-4 py-3 text-left">#</th>
+              <th class="px-4 py-3 text-left">Timestamp</th>
+              <th class="px-4 py-3 text-left">User</th>
+              <th class="px-4 py-3 text-left">Action</th>
+              <th class="px-4 py-3 text-left">Type</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100" id="logsBody">
+            <% if (logs.length > 0) { %> <% logs.forEach((log, index) => { %>
+            <tr class="hover:bg-gray-50 transition log-row">
+              <td class="px-4 py-3 font-medium"><%= index + 1 %></td>
+              <td class="px-4 py-3 timestamp">
+                <%= new Date(log.log_time).toLocaleString() %>
+              </td>
+              <td class="px-4 py-3 user">
+                <%= log.user_id?.username || 'Unknown' %>
+              </td>
+              <td class="px-4 py-3 action"><%= log.action %></td>
+              <td class="px-4 py-3 log-type">
+                <% if (log.log_type === 'error') { %>
+                <span
+                  class="inline-block bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Error</span
+                >
+                <% } else if (log.log_type === 'warning') { %>
+                <span
+                  class="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Warning</span
+                >
+                <% } else { %>
+                <span
+                  class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full capitalize"
+                  ><%= log.log_type %></span
+                >
+                <% } %>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="5" class="text-center text-gray-500 px-4 py-6">
+                No logs found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Chart Section -->
+      <div class="bg-white rounded-xl shadow p-6 mt-10">
+        <h2 class="text-lg font-bold text-gray-700 mb-4">Activity Overview</h2>
+        <canvas id="logChart" height="100"></canvas>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const ctx = document.getElementById("logChart").getContext("2d");
+      const logChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Info", "Warning", "Error"],
+          datasets: [
+            {
+              label: "Log Entries",
+              data: [12, 5, 3], // Replace with real data
+              backgroundColor: ["#3b82f6", "#f59e0b", "#ef4444"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+        },
+      });
+
+      document.getElementById("date").textContent = new Date().toLocaleString();
+      const searchInput = document.getElementById("logSearch");
+      const typeFilter = document.getElementById("typeFilter");
+      const dateFilter = document.getElementById("dateFilter");
+      const logRows = document.querySelectorAll(".log-row");
+
+      function filterLogs() {
+        const searchText = searchInput.value.toLowerCase();
+        const selectedType = typeFilter.value;
+        const selectedDate = dateFilter.value;
+
+        logRows.forEach((row) => {
+          const user = row.querySelector(".user")?.textContent.toLowerCase();
+          const action = row
+            .querySelector(".action")
+            ?.textContent.toLowerCase();
+          const type = row
+            .querySelector(".log-type")
+            ?.textContent.toLowerCase();
+          const timestamp = row.querySelector(".timestamp")?.textContent;
+
+          const matchesSearch =
+            user.includes(searchText) || action.includes(searchText);
+          const matchesType = !selectedType || type.includes(selectedType);
+          const matchesDate = !selectedDate || timestamp.includes(selectedDate);
+
+          if (matchesSearch && matchesType && matchesDate) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
+
+      searchInput.addEventListener("input", filterLogs);
+      typeFilter.addEventListener("change", filterLogs);
+      dateFilter.addEventListener("change", filterLogs);
+    </script>
+  </body>
+</html>

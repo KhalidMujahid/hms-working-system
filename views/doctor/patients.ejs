@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Patients | EHRMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen flex bg-gray-100 text-gray-800">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white hidden md:flex flex-col p-6">
+      <h2 class="text-2xl font-bold text-center mb-6">
+        <i class="fas fa-user-md mr-2"></i>Doctor Panel
+      </h2>
+      <nav class="space-y-3">
+        <a
+          href="/doctor/dashboard"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-home mr-2"></i>Dashboard</a
+        >
+        <a
+          href="/doctor/patients"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-user-injured mr-2"></i>My Patients</a
+        >
+        <a
+          href="/doctor/appointments"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-calendar-check mr-2"></i>Appointments</a
+        >
+        <a
+          href="/doctor/prescriptions"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-prescription-bottle-alt mr-2"></i>Prescriptions</a
+        >
+        <a
+          href="/doctor/lab-requests"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-vials mr-2"></i>Lab Requests</a
+        >
+        <a
+          href="/doctor/observations"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-notes-medical"></i>
+          <span>Observations</span>
+        </a>
+        <a
+          href="/doctor/theatre"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-syringe"></i>
+          <span>Theatre Case</span>
+        </a>
+        <a
+          href="/auth/logout"
+          class="mt-6 text-red-200 hover:text-white hover:bg-red-600 px-3 py-2 rounded block"
+          ><i class="fas fa-sign-out-alt mr-2"></i>Logout</a
+        >
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">My Patients</h1>
+        <span class="text-sm text-gray-500">Total: <%= patients.length %></span>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <table class="min-w-full text-sm text-left border border-gray-200">
+          <thead class="bg-gray-100 text-gray-700">
+            <tr>
+              <th class="px-4 py-2 border-b">#</th>
+              <th class="px-4 py-2 border-b">Full Name</th>
+              <th class="px-4 py-2 border-b">Gender</th>
+              <th class="px-4 py-2 border-b">DOB</th>
+              <th class="px-4 py-2 border-b">Phone</th>
+              <th class="px-4 py-2 border-b">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (patients.length > 0) { %> <% patients.forEach((row, index) =>
+            { %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-2"><%= index + 1 %></td>
+              <td class="px-4 py-2">
+                <%= row.firstName %> <%= row.lastName %>
+              </td>
+              <td class="px-4 py-2"><%= row.gender %></td>
+              <td class="px-4 py-2">
+                <%= row.dateOfBirth.toISOString().split("T")[0] %>
+              </td>
+              <td class="px-4 py-2"><%= row.phone %></td>
+              <td class="px-4 py-2">
+                <a
+                  href="/doctor/view-patient/<%= row._id %>"
+                  class="inline-flex items-center px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs"
+                >
+                  <i class="fas fa-eye mr-1"></i>View
+                </a>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center py-4 text-gray-500">
+                No patients found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

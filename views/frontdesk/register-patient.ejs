@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Patient | Front Desk</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="max-w-5xl mx-auto p-6">
+      <% if (success && success.length > 0) { %>
+      <div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-4">
+        <%= success[0] %>
+      </div>
+      <% } %> <% if (error && error.length > 0) { %>
+      <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+        <%= error[0] %>
+      </div>
+      <% } %>
+
+      <h1 class="text-3xl font-bold mb-6 text-green-700">
+        Register New Patient
+      </h1>
+
+      <form
+        action="/frontdesk/patients/register"
+        method="POST"
+        class="space-y-8 bg-white p-6 rounded shadow"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label>First Name</label>
+            <input
+              name="firstName"
+              required
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label>Last Name</label>
+            <input name="lastName" required class="w-full border p-2 rounded" />
+          </div>
+          <div>
+            <label>Date of Birth</label>
+            <input
+              name="dateOfBirth"
+              type="date"
+              required
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label>Gender</label>
+            <select name="gender" required class="w-full border p-2 rounded">
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label>Phone</label>
+            <input name="phone" required class="w-full border p-2 rounded" />
+          </div>
+          <div>
+            <label>Email</label>
+            <input
+              name="email"
+              type="email"
+              required
+              class="w-full border p-2 rounded"
+            />
+          </div>
+        </div>
+
+        <fieldset class="border-t pt-4">
+          <legend class="text-lg font-semibold">Address</legend>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+            <input
+              name="address.street"
+              placeholder="Street"
+              class="border p-2 rounded"
+            />
+            <input
+              name="address.city"
+              placeholder="City"
+              class="border p-2 rounded"
+            />
+            <input
+              name="address.state"
+              placeholder="State"
+              class="border p-2 rounded"
+            />
+            <input
+              name="address.zipCode"
+              placeholder="Zip Code"
+              class="border p-2 rounded"
+            />
+            <input
+              name="address.country"
+              value="NG"
+              class="border p-2 rounded"
+            />
+          </div>
+        </fieldset>
+
+        <fieldset class="border-t pt-4">
+          <legend class="text-lg font-semibold">Emergency Contact</legend>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+            <input
+              name="emergencyContact.name"
+              placeholder="Name"
+              class="border p-2 rounded"
+            />
+            <input
+              name="emergencyContact.relation"
+              placeholder="Relation"
+              class="border p-2 rounded"
+            />
+            <input
+              name="emergencyContact.phone"
+              placeholder="Phone"
+              class="border p-2 rounded"
+            />
+          </div>
+        </fieldset>
+
+        <fieldset class="border-t pt-4">
+          <legend class="text-lg font-semibold">Medical History</legend>
+          <div class="space-y-2">
+            <input
+              name="medicalHistory[0].condition"
+              placeholder="Condition"
+              class="border p-2 rounded w-full"
+            />
+            <input
+              name="medicalHistory[0].diagnosedDate"
+              type="date"
+              class="border p-2 rounded w-full"
+            />
+            <input
+              name="medicalHistory[0].notes"
+              placeholder="Notes"
+              class="border p-2 rounded w-full"
+            />
+          </div>
+        </fieldset>
+
+        <fieldset class="border-t pt-4">
+          <legend class="text-lg font-semibold">Allergies</legend>
+          <input
+            name="allergies[]"
+            placeholder="e.g. Penicillin"
+            class="border p-2 rounded w-full"
+          />
+        </fieldset>
+
+        <fieldset class="border-t pt-4">
+          <legend class="text-lg font-semibold">Current Medications</legend>
+          <div class="space-y-2">
+            <input
+              name="currentMedications[0].name"
+              placeholder="Name"
+              class="border p-2 rounded w-full"
+            />
+            <input
+              name="currentMedications[0].dosage"
+              placeholder="Dosage"
+              class="border p-2 rounded w-full"
+            />
+            <input
+              name="currentMedications[0].frequency"
+              placeholder="Frequency"
+              class="border p-2 rounded w-full"
+            />
+          </div>
+        </fieldset>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label>Blood Type</label>
+            <select name="bloodType" class="w-full border p-2 rounded">
+              <option value="">Select</option>
+              <option>A+</option>
+              <option>A-</option>
+              <option>B+</option>
+              <option>B-</option>
+              <option>AB+</option>
+              <option>AB-</option>
+              <option>O+</option>
+              <option>O-</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label
+              for="doctor_id"
+              class="block text-sm font-medium text-gray-700"
+              >Assign Doctor</label
+            >
+            <select
+              name="doctor_id"
+              id="doctor_id"
+              required
+              class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            >
+              <option value="">Select Doctor</option>
+              <% doctors.forEach(doc => { %>
+              <option value="<%= doc._id %>">Dr <%= doc.username %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <fieldset class="border-t pt-4">
+          <legend class="text-lg font-semibold">Insurance</legend>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+            <input
+              name="insurance.provider"
+              placeholder="Provider"
+              class="border p-2 rounded"
+            />
+            <input
+              name="insurance.policyNumber"
+              placeholder="Policy #"
+              class="border p-2 rounded"
+            />
+            <input
+              name="insurance.groupNumber"
+              placeholder="Group #"
+              class="border p-2 rounded"
+            />
+          </div>
+        </fieldset>
+
+        <button
+          type="submit"
+          class="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800"
+        >
+          <i class="fas fa-user-plus"></i> Register Patient
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Patient | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="flex min-h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <div class="w-64 bg-green-700 text-white p-6 space-y-4">
+      <h2 class="text-2xl font-bold text-center mb-6">Doctor Panel</h2>
+      <a href="/doctor/dashboard" class="block hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-home mr-2"></i> Dashboard</a
+      >
+      <a href="/doctor/patients" class="block hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-user-injured mr-2"></i> My Patients</a
+      >
+      <a
+        href="/doctor/appointments"
+        class="block hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-calendar-alt mr-2"></i> Appointments</a
+      >
+      <a
+        href="/doctor/prescriptions"
+        class="block hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-pills mr-2"></i> Prescriptions</a
+      >
+      <a
+        href="/doctor/lab-requests"
+        class="block hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-vials mr-2"></i> Lab Requests</a
+      >
+      <a href="/auth/logout" class="block hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+      >
+    </div>
+
+    <!-- Main -->
+    <main class="flex-1 p-8 overflow-y-auto">
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+          Patient: <%= patient.full_name %>
+        </h1>
+        <p class="text-sm text-gray-500">ID: <%= patient._id %></p>
+      </div>
+
+      <!-- Patient Info -->
+      <div class="bg-white p-6 rounded shadow mb-6">
+        <h2 class="text-xl font-semibold text-green-700 mb-4">
+          <i class="fas fa-info-circle mr-2"></i>Patient Information
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+          <p><strong>Full Name:</strong> <%= patient.full_name %></p>
+          <p><strong>Gender:</strong> <%= patient.gender %></p>
+          <p><strong>Date of Birth:</strong> <%= patient.dob %></p>
+          <p><strong>Phone:</strong> <%= patient.phone %></p>
+          <p>
+            <strong>Address:</strong> <%= patient.address?.street || '' %>, <%=
+            patient.address?.city || '' %>, <%= patient.address?.state || '' %>
+          </p>
+        </div>
+      </div>
+
+      <!-- Medical Records -->
+      <div class="bg-white p-6 rounded shadow mb-6">
+        <h2 class="text-xl font-semibold text-green-700 mb-4">
+          <i class="fas fa-heartbeat mr-2"></i>Medical Records
+        </h2>
+        <table class="w-full table-auto text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-left">
+              <th class="p-2">Date</th>
+              <th class="p-2">Diagnosis</th>
+              <th class="p-2">Treatment</th>
+              <th class="p-2">Doctor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (records.length > 0) { %> <% records.forEach(r => { %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-2"><%= r.date %></td>
+              <td class="p-2"><%= r.diagnosis %></td>
+              <td class="p-2"><%= r.treatment %></td>
+              <td class="p-2"><%= r.doctor %></td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="4" class="text-center p-4 text-gray-500">
+                No records found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Prescriptions -->
+      <div class="bg-white p-6 rounded shadow mb-6">
+        <h2 class="text-xl font-semibold text-green-700 mb-4">
+          <i class="fas fa-pills mr-2"></i>Prescriptions
+        </h2>
+        <table class="w-full table-auto text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-left">
+              <th class="p-2">Date</th>
+              <th class="p-2">Drug</th>
+              <th class="p-2">Dosage</th>
+              <th class="p-2">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (prescriptions.length > 0) { %> <% prescriptions.forEach(p =>
+            { %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-2"><%= p.date %></td>
+              <td class="p-2"><%= p.drug_name %></td>
+              <td class="p-2"><%= p.dosage %></td>
+              <td class="p-2"><%= p.duration %></td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="4" class="text-center p-4 text-gray-500">
+                No prescriptions found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Lab Result -->
+      <div class="bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold text-green-700 mb-4">
+          <i class="fas fa-vial mr-2"></i>Lab Result
+        </h2>
+        <table class="w-full table-auto text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-left">
+              <th class="p-2">Date</th>
+              <th class="p-2">Test</th>
+              <th class="p-2">Result</th>
+              <th class="p-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (labs.length > 0) { %> <% labs.forEach(l => { %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-2"><%= l.date %></td>
+              <td class="p-2"><%= l.test_type %></td>
+              <td class="p-2"><%= l.result %></td>
+              <td class="p-2"><%= l.status %></td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="4" class="text-center p-4 text-gray-500">
+                No lab requests found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

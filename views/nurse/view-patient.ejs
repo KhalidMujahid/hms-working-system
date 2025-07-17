@@ -1,0 +1,212 @@
+<?php
+session_start();
+require_once "../config/db.php";
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'nurse') {
+  header("Location: ../auth/login.php");
+  exit();
+}
+
+$patient_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($patient_id <= 0) {
+  echo "Invalid patient ID.";
+  exit();
+}
+
+$query = "SELECT * FROM patients WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $patient_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+  echo "Patient not found.";
+  exit();
+}
+
+$patient = $result->fetch_assoc();
+$today = date("Y-m-d");
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Details | EHRMS</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <style>
+    :root {
+      --primary-color: #198754;
+      --bg-color: #f4f6f9;
+      --text-dark: #333;
+      --text-light: #666;
+      --radius: 12px;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-color);
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .sidebar a {
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+      display: block;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .main {
+      flex: 1;
+      padding: 2rem 2.5rem;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      color: var(--text-dark);
+    }
+
+    .profile-card {
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .profile-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-group label {
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 0.3rem;
+    }
+
+    .profile-group span {
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.5rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>Nurse</h2>
+    <a href="dashboard.php">🏠 Dashboard</a>
+    <a href="patients.php">🧍 Patients</a>
+    <a href="vitals.php">❤️ Record Vitals</a>
+    <a href="appointments.php">📅 Appointments</a>
+    <a href="medications.php">💉 Administer Meds</a>
+    <a href="reports.php">📄 Reports</a>
+    <a href="../../auth/logout.php">🚪 Logout</a>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>Patient Details</h1>
+      <span><?= $today ?></span>
+    </div>
+
+    <div class="profile-card">
+      <div class="section-title">Personal Information</div>
+      <div class="profile-grid">
+        <div class="profile-group"><label>Full Name</label><span><?= htmlspecialchars($patient['fullname']) ?></span>
+        </div>
+        <div class="profile-group"><label>Gender</label><span><?= htmlspecialchars($patient['gender']) ?></span></div>
+        <div class="profile-group"><label>Date of Birth</label><span><?= htmlspecialchars($patient['dob']) ?></span>
+        </div>
+        <div class="profile-group"><label>Age</label><span><?= htmlspecialchars($patient['age']) ?></span></div>
+        <div class="profile-group"><label>Phone Number</label><span><?= htmlspecialchars($patient['phone']) ?></span>
+        </div>
+        <div class="profile-group"><label>Email</label><span><?= htmlspecialchars($patient['email']) ?></span></div>
+        <div class="profile-group"><label>Address</label><span><?= htmlspecialchars($patient['address']) ?></span></div>
+        <div class="profile-group"><label>Room / Ward</label><span><?= htmlspecialchars($patient['room']) ?></span>
+        </div>
+      </div>
+
+      <div class="section-title">Medical Summary</div>
+      <div class="profile-grid">
+        <div class="profile-group"><label>Blood
+            Group</label><span><?= htmlspecialchars($patient['blood_group']) ?></span></div>
+        <div class="profile-group"><label>Allergies</label><span><?= htmlspecialchars($patient['allergies']) ?></span>
+        </div>
+        <div class="profile-group"><label>Chronic
+            Conditions</label><span><?= htmlspecialchars($patient['chronic_conditions']) ?></span></div>
+        <div class="profile-group"><label>Recent
+            Diagnosis</label><span><?= htmlspecialchars($patient['recent_diagnosis']) ?></span></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

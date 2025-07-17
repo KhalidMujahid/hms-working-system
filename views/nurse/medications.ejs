@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Administer Medications | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      class="w-64 min-h-screen bg-gradient-to-b from-green-700 to-green-800 text-white p-6 shadow-lg rounded-r-2xl"
+    >
+      <h2 class="text-2xl font-bold text-center mb-6 tracking-wide">
+        👩‍⚕️ Nurse Panel
+      </h2>
+
+      <nav class="space-y-2 text-base">
+        <a
+          href="/nurse/dashboard"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-home text-lg"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <a
+          href="/nurse/patients"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-user-nurse text-lg"></i>
+          <span>Patients</span>
+        </a>
+
+        <a
+          href="/nurse/vitals"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-heartbeat text-lg"></i>
+          <span>Record Vitals</span>
+        </a>
+
+        <a
+          href="/nurse/vitals/list"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-list text-lg"></i>
+          <span>Vitals List</span>
+        </a>
+
+        <a
+          href="/nurse/appointments"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-calendar-check text-lg"></i>
+          <span>Appointments</span>
+        </a>
+
+        <a
+          href="/nurse/medications"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-syringe text-lg"></i>
+          <span>Administer Meds</span>
+        </a>
+
+        <a
+          href="/nurse/reports"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-file-alt text-lg"></i>
+          <span>Reports</span>
+        </a>
+
+        <hr class="my-4 border-green-500" />
+
+        <a
+          href="/auth/logout"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-red-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-sign-out-alt text-lg"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-6">
+      <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <i class="fas fa-pills text-green-600"></i> Medications to
+            Administer
+          </h1>
+          <span class="text-sm text-gray-500"><%= today %></span>
+        </div>
+
+        <% if (medications.length > 0) { %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table-auto border-collapse">
+            <thead class="bg-green-600 text-white text-left">
+              <tr>
+                <th class="p-3">Patient</th>
+                <th class="p-3">Medication</th>
+                <th class="p-3">Dosage</th>
+                <th class="p-3">Time</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% medications.forEach(med => { %>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="p-3"><%= med.patient_name %></td>
+                <td class="p-3"><%= med.medication_name %></td>
+                <td class="p-3"><%= med.dosage %></td>
+                <td class="p-3"><%= med.formattedTime %></td>
+                <td class="p-3">
+                  <span
+                    class="text-xs px-2 py-1 rounded font-semibold <%= med.status === 'given' ? 'bg-green-600 text-white' : 'bg-yellow-400 text-black' %>"
+                  >
+                    <%= med.status.charAt(0).toUpperCase() + med.status.slice(1)
+                    %>
+                  </span>
+                </td>
+                <td class="p-3">
+                  <% if (med.status === 'pending') { %>
+                  <form method="POST" action="/nurse/medications/give">
+                    <input type="hidden" name="med_id" value="<%= med.id %>" />
+                    <button
+                      type="submit"
+                      class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                    >
+                      <i class="fas fa-check-circle"></i> Mark as Given
+                    </button>
+                  </form>
+                  <% } else { %>
+                  <button
+                    class="bg-gray-300 text-gray-600 px-3 py-1 rounded text-sm cursor-not-allowed"
+                    disabled
+                  >
+                    <i class="fas fa-check-double"></i> Completed
+                  </button>
+                  <% } %>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } else { %>
+        <p class="text-gray-600">No medication tasks for today.</p>
+        <% } %>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab Requests | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white hidden md:flex flex-col p-6">
+      <h2 class="text-2xl font-bold text-center mb-6">
+        <i class="fas fa-user-md mr-2"></i>Doctor Panel
+      </h2>
+      <nav class="space-y-3">
+        <a
+          href="/doctor/dashboard"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-home mr-2"></i>Dashboard</a
+        >
+        <a
+          href="/doctor/patients"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-user-injured mr-2"></i>My Patients</a
+        >
+        <a
+          href="/doctor/appointments"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-calendar-check mr-2"></i>Appointments</a
+        >
+        <a
+          href="/doctor/prescriptions"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-prescription-bottle-alt mr-2"></i>Prescriptions</a
+        >
+        <a
+          href="/doctor/lab-requests"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-vials mr-2"></i>Lab Requests</a
+        >
+        <a
+          href="/doctor/observations"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-notes-medical"></i>
+          <span>Observations</span>
+        </a>
+        <a
+          href="/doctor/theatre"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-syringe"></i>
+          <span>Theatre Case</span>
+        </a>
+        <a
+          href="/auth/logout"
+          class="mt-6 text-red-200 hover:text-white hover:bg-red-600 px-3 py-2 rounded block"
+          ><i class="fas fa-sign-out-alt mr-2"></i>Logout</a
+        >
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-700">Lab Requests</h1>
+        <span class="text-gray-500">Total: <%= requests.length %></span>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-4">
+        <table class="w-full table-auto text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-left">
+              <th class="p-3">#</th>
+              <th class="p-3">Patient</th>
+              <th class="p-3">Test Type</th>
+              <th class="p-3">Date Requested</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Result</th>
+              <th class="p-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (requests.length > 0) { %> <% requests.forEach((r, index) => {
+            %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-3"><%= index + 1 %></td>
+              <td class="p-3"><%= r.full_name %></td>
+              <td class="p-3"><%= r.test_type %></td>
+              <td class="p-3"><%= r.date_requested %></td>
+              <td class="p-3">
+                <span
+                  class="inline-block px-2 py-1 rounded text-xs font-medium <%= r.status === 'Completed' ? 'bg-green-600 text-white' : 'bg-yellow-400 text-gray-800' %>"
+                >
+                  <%= r.status %>
+                </span>
+              </td>
+              <td class="p-3"><%= r.result || '—' %></td>
+              <td class="p-3">
+                <a
+                  href="/doctor/view-patient/<%= r.patient_id %>"
+                  class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm"
+                >
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center py-4 text-gray-500">
+                No lab requests found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

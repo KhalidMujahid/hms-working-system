@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electronic Health Records | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white p-6 flex flex-col space-y-4">
+      <h2 class="text-2xl font-bold text-center mb-4">Doctor Panel</h2>
+      <a href="/doctor/dashboard" class="hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-home mr-2"></i> Dashboard</a
+      >
+      <a href="/doctor/patients" class="hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-user-injured mr-2"></i> My Patients</a
+      >
+      <a href="/doctor/appointments" class="hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-calendar-alt mr-2"></i> Appointments</a
+      >
+      <a href="/doctor/ehr" class="bg-green-800 p-2 rounded"
+        ><i class="fas fa-stethoscope mr-2"></i> EHR</a
+      >
+      <a href="/doctor/prescriptions" class="hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-pills mr-2"></i> Prescriptions</a
+      >
+      <a href="/doctor/lab-requests" class="hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-vials mr-2"></i> Lab Requests</a
+      >
+      <a href="/auth/logout" class="hover:bg-green-600 p-2 rounded"
+        ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+      >
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-700">
+          Electronic Health Records
+        </h1>
+        <span class="text-gray-500">Total Records: <%= records.length %></span>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-4">
+        <table class="w-full table-auto text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-left">
+              <th class="p-3">#</th>
+              <th class="p-3">Patient</th>
+              <th class="p-3">Date</th>
+              <th class="p-3">Diagnosis</th>
+              <th class="p-3">Treatment Plan</th>
+              <th class="p-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (records.length > 0) { %> <% records.forEach((rec, index) => {
+            %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-3"><%= index + 1 %></td>
+              <td class="p-3"><%= rec.full_name %></td>
+              <td class="p-3"><%= rec.date %></td>
+              <td class="p-3"><%= rec.diagnosis %></td>
+              <td class="p-3"><%= rec.treatment %></td>
+              <td class="p-3">
+                <a
+                  href="/doctor/view-patient/<%= rec.id %>"
+                  class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm"
+                >
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="6" class="text-center py-4 text-gray-500">
+                No EHR records found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

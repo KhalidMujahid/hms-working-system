@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HMO Claims</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 font-sans antialiased">
+    <div class="max-w-7xl mx-auto px-4 py-10">
+      <!-- Breadcrumbs + Dashboard Button -->
+      <div class="flex justify-between items-center mb-6">
+        <nav class="text-sm text-gray-500">
+          <a href="/hmo/dashboard" class="hover:underline text-blue-600">
+            Dashboard
+          </a>
+          <span class="mx-2">/</span>
+          <span>Claims</span>
+        </nav>
+        <a
+          href="/hmo/dashboard"
+          class="text-sm bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+        >
+          <i class="fas fa-arrow-left mr-2"></i> Go to Dashboard
+        </a>
+      </div>
+
+      <!-- Page Header -->
+      <div
+        class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6"
+      >
+        <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fas fa-file-invoice-dollar text-blue-700"></i> Claims
+          Management
+        </h1>
+
+        <div class="flex flex-wrap gap-3">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search by patient/service..."
+            class="px-4 py-2 border rounded shadow-sm text-sm focus:ring-2 focus:ring-blue-400"
+            oninput="filterTable()"
+          />
+          <select
+            id="statusFilter"
+            class="px-3 py-2 border rounded shadow-sm text-sm text-gray-700"
+            onchange="filterTable()"
+          >
+            <option value="">All Statuses</option>
+            <option value="pending">Only Pending</option>
+            <option value="approved">Only Approved</option>
+            <option value="rejected">Only Rejected</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Claims Table -->
+      <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table
+          id="claimsTable"
+          class="min-w-full divide-y divide-gray-200 text-sm"
+        >
+          <thead
+            class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider"
+          >
+            <tr>
+              <th class="px-6 py-3 text-left">Patient</th>
+              <th class="px-6 py-3 text-left">Service</th>
+              <th class="px-6 py-3 text-left">Amount</th>
+              <th class="px-6 py-3 text-left">Status</th>
+              <th class="px-6 py-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="claimsBody" class="bg-white divide-y divide-gray-100">
+            <% claims.forEach((claim, i) => { %>
+            <tr class="filter-row" data-status="<%= claim.status %>">
+              <td class="px-6 py-4">
+                <button
+                  onclick="openModal(<%= i %>)"
+                  class="text-blue-600 hover:underline"
+                >
+                  <%= claim.patient.firstName %> <%= claim.patient.lastName %>
+                </button>
+              </td>
+              <td class="px-6 py-4"><%= claim.serviceDescription %></td>
+              <td class="px-6 py-4">₦<%= claim.amount.toLocaleString() %></td>
+              <td class="px-6 py-4">
+                <% if (claim.status === 'approved') { %>
+                <span
+                  class="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded-full"
+                >
+                  <i class="fas fa-check mr-1"></i> Approved
+                </span>
+                <% } else if (claim.status === 'rejected') { %>
+                <span
+                  class="inline-flex items-center px-2 py-1 bg-red-100 text-red-800 rounded-full"
+                >
+                  <i class="fas fa-times mr-1"></i> Rejected
+                </span>
+                <% } else { %>
+                <span
+                  class="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full"
+                >
+                  <i class="fas fa-hourglass-half mr-1"></i> Pending
+                </span>
+                <% } %>
+              </td>
+              <td class="px-6 py-4 space-x-2">
+                <% if (claim.status === 'pending') { %>
+                <form
+                  action="/hmo/claims/<%= claim._id %>/approve"
+                  method="POST"
+                  class="inline"
+                >
+                  <button
+                    class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                  >
+                    <i class="fas fa-check"></i>
+                  </button>
+                </form>
+                <form
+                  action="/hmo/claims/<%= claim._id %>/reject"
+                  method="POST"
+                  class="inline"
+                >
+                  <button
+                    class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </form>
+                <% } else { %>
+                <span class="text-gray-500 italic">No Action</span>
+                <% } %>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center mt-6 space-x-4 text-sm">
+        <button
+          onclick="prevPage()"
+          id="prevBtn"
+          class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
+        >
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <button
+          onclick="nextPage()"
+          id="nextBtn"
+          class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
+        >
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Dialog -->
+    <div
+      id="claimModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-xl max-w-lg w-full">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Claim Details</h2>
+          <button
+            onclick="closeModal()"
+            class="text-gray-500 hover:text-red-600"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div id="modalContent" class="text-sm text-gray-700 space-y-2">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const rowsPerPage = 10;
+      let currentPage = 1;
+      const rows = document.querySelectorAll(".filter-row");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      function updatePagination() {
+        const visibleRows = Array.from(rows).filter(
+          (r) => r.style.display !== "none"
+        );
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        visibleRows.forEach((row, i) => {
+          row.style.display = i >= start && i < end ? "" : "none";
+        });
+
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = end >= visibleRows.length;
+      }
+
+      function nextPage() {
+        currentPage++;
+        updatePagination();
+      }
+
+      function prevPage() {
+        if (currentPage > 1) {
+          currentPage--;
+          updatePagination();
+        }
+      }
+
+      function filterTable() {
+        const query = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const statusFilter = document.getElementById("statusFilter").value;
+
+        rows.forEach((row) => {
+          const text = row.innerText.toLowerCase();
+          const status = row.dataset.status;
+
+          const matchesQuery = text.includes(query);
+          const matchesStatus = !statusFilter || status === statusFilter;
+
+          row.style.display = matchesQuery && matchesStatus ? "" : "none";
+        });
+
+        currentPage = 1;
+        updatePagination();
+      }
+
+      function openModal(index) {
+        const modal = document.getElementById("claimModal");
+        const content = document.getElementById("modalContent");
+
+        const row = document.querySelectorAll(".filter-row")[index];
+        const cells = row.querySelectorAll("td");
+
+        content.innerHTML = `
+          <p><strong>Patient:</strong> ${cells[0].innerText}</p>
+          <p><strong>Service:</strong> ${cells[1].innerText}</p>
+          <p><strong>Amount:</strong> ${cells[2].innerText}</p>
+          <p><strong>Status:</strong> ${cells[3].innerText}</p>
+        `;
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("claimModal");
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+      }
+
+      // Initialize pagination on load
+      filterTable();
+    </script>
+  </body>
+</html>

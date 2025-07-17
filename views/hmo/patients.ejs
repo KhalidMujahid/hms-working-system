@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HMO Patients</title>
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body class="bg-gray-100 font-sans">
+    <div class="max-w-7xl mx-auto px-4 py-10">
+      <!-- Header & Controls -->
+      <div
+        class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4"
+      >
+        <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
+          <i class="fas fa-users text-blue-700"></i>
+          Insured Patients
+        </h1>
+
+        <div
+          class="flex flex-wrap gap-3 justify-start sm:justify-end items-center w-full sm:w-auto"
+        >
+          <!-- Go to Dashboard -->
+          <a
+            href="/hmo/dashboard"
+            class="bg-gray-200 text-gray-800 px-4 py-2 rounded shadow hover:bg-gray-300 transition text-sm flex items-center gap-2"
+          >
+            <i class="fas fa-arrow-left"></i> Dashboard
+          </a>
+
+          <!-- Search Field -->
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search patients..."
+            class="px-4 py-2 border rounded shadow-sm text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            oninput="filterTable()"
+          />
+
+          <!-- Add Patient Button -->
+          <a
+            href="/hmo/patients/new"
+            class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition text-sm flex items-center gap-2"
+          >
+            <i class="fas fa-user-plus"></i> Add Patient
+          </a>
+        </div>
+      </div>
+
+      <!-- Result Count -->
+      <div id="resultCount" class="text-sm text-gray-600 mb-2">
+        Showing <span id="rangeStart">1</span>–<span id="rangeEnd">10</span> of
+        <span id="totalRows">0</span> patients
+      </div>
+
+      <!-- Table -->
+      <% if (patients.length === 0) { %>
+      <div
+        class="bg-white border border-gray-200 rounded p-6 text-center shadow"
+      >
+        <i class="fas fa-exclamation-circle text-yellow-400 text-3xl mb-3"></i>
+        <p class="text-gray-600 text-lg">No insured patients found.</p>
+      </div>
+      <% } else { %>
+      <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table
+          id="patientsTable"
+          class="min-w-full divide-y divide-gray-200 text-sm"
+        >
+          <thead
+            class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider sticky top-0 z-10"
+          >
+            <tr>
+              <th class="px-6 py-3 text-left">Full Name</th>
+              <th class="px-6 py-3 text-left">Gender</th>
+              <th class="px-6 py-3 text-left">Phone</th>
+              <th class="px-6 py-3 text-left">Insurance Provider</th>
+              <th class="px-6 py-3 text-left">Policy Number</th>
+              <th class="px-6 py-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-100" id="tableBody">
+            <% patients.forEach((patient, index) => { %>
+            <tr
+              class="table-row hover:bg-gray-50 transition cursor-pointer"
+              data-index="<%= index %>"
+            >
+              <td class="px-6 py-4 font-medium text-gray-800">
+                <%= patient.firstName %> <%= patient.lastName %>
+              </td>
+              <td class="px-6 py-4 capitalize text-gray-600">
+                <%= patient.gender %>
+              </td>
+              <td class="px-6 py-4 text-gray-600">
+                <i class="fas fa-phone-alt mr-1 text-gray-400"></i> <%=
+                patient.phone %>
+              </td>
+              <td class="px-6 py-4 text-gray-600">
+                <i class="fas fa-shield-alt mr-1 text-gray-400"></i>
+                <%= patient.insurance?.provider || "N/A" %>
+              </td>
+              <td class="px-6 py-4 text-gray-600">
+                <i class="fas fa-id-card mr-1 text-gray-400"></i>
+                <%= patient.insurance?.policyNumber || "N/A" %>
+              </td>
+              <td class="px-6 py-4 text-gray-600 space-x-2">
+                <a
+                  href="/hmo/patients/<%= patient._id %>"
+                  class="text-blue-600 hover:text-blue-800"
+                  title="View"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+                <a
+                  href="/hmo/patients/<%= patient._id %>/edit"
+                  class="text-green-600 hover:text-green-800"
+                  title="Edit"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+                <form
+                  action="/hmo/patients/<%= patient._id %>?_method=DELETE"
+                  method="POST"
+                  class="inline"
+                  onsubmit="return confirm('Are you sure you want to delete this patient?');"
+                >
+                  <button
+                    type="submit"
+                    class="text-red-600 hover:text-red-800"
+                    title="Delete"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No Search Results Message -->
+      <p id="noResults" class="mt-6 text-center text-gray-500 hidden">
+        <i class="fas fa-search"></i> No results match your search.
+      </p>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-6 text-sm text-gray-700">
+        <button
+          onclick="previousPage()"
+          class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 transition"
+          id="prevBtn"
+        >
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <button
+          onclick="nextPage()"
+          class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 transition"
+          id="nextBtn"
+        >
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Script -->
+    <script>
+      const rowsPerPage = 10;
+      let currentPage = 1;
+
+      const rows = document.querySelectorAll(".table-row");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const rangeStart = document.getElementById("rangeStart");
+      const rangeEnd = document.getElementById("rangeEnd");
+      const totalRows = document.getElementById("totalRows");
+      const noResults = document.getElementById("noResults");
+
+      let filteredRows = Array.from(rows);
+
+      function updatePagination() {
+        const total = filteredRows.length;
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = Math.min(start + rowsPerPage, total);
+
+        rows.forEach((row) => (row.style.display = "none"));
+        filteredRows
+          .slice(start, end)
+          .forEach((row) => (row.style.display = ""));
+
+        rangeStart.textContent = total === 0 ? 0 : start + 1;
+        rangeEnd.textContent = end;
+        totalRows.textContent = total;
+
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = end >= total;
+
+        noResults.classList.toggle("hidden", total > 0);
+      }
+
+      function previousPage() {
+        if (currentPage > 1) {
+          currentPage--;
+          updatePagination();
+        }
+      }
+
+      function nextPage() {
+        if (currentPage * rowsPerPage < filteredRows.length) {
+          currentPage++;
+          updatePagination();
+        }
+      }
+
+      function filterTable() {
+        const query = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        filteredRows = Array.from(rows).filter((row) =>
+          row.innerText.toLowerCase().includes(query)
+        );
+        currentPage = 1;
+        updatePagination();
+      }
+
+      // Initial render
+      updatePagination();
+    </script>
+  </body>
+</html>

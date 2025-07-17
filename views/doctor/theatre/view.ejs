@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Theatre Case Details | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-gray-100 min-h-screen py-10 px-4">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-file-medical-alt text-blue-600 mr-3 text-xl"></i>
+          Theatre Case Details
+        </h1>
+        <a
+          href="/doctor/theatre"
+          class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+        >
+          <i class="fas fa-arrow-left mr-1"></i> Back to List
+        </a>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 text-sm">
+        <div class="space-y-1">
+          <p class="font-semibold text-gray-600">Case Name</p>
+          <p><%= theatreCase.caseName %></p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="font-semibold text-gray-600">Hospital Number</p>
+          <p><%= theatreCase.hospitalNumber %></p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="font-semibold text-gray-600">Date & Time</p>
+          <p>
+            <%= new Date(theatreCase.date).toLocaleString('en-US', { dateStyle:
+            'medium', timeStyle: 'short' }) %>
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="font-semibold text-gray-600">Diagnosis</p>
+          <p><%= theatreCase.diagnosis %></p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="font-semibold text-gray-600">Surgeon</p>
+          <p><%= theatreCase.surgeon %></p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="font-semibold text-gray-600">Assistant</p>
+          <p><%= theatreCase.assistant || 'N/A' %></p>
+        </div>
+
+        <div class="col-span-1 sm:col-span-2 space-y-1">
+          <p class="font-semibold text-gray-600">Remarks</p>
+          <div
+            class="bg-gray-50 border border-gray-200 p-3 rounded whitespace-pre-line text-sm"
+          >
+            <%= theatreCase.remarks || 'No remarks provided.' %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-8 text-right">
+        <a
+          href="/doctor/theatre"
+          class="inline-flex items-center bg-blue-600 text-white px-5 py-2 rounded shadow hover:bg-blue-700 transition"
+        >
+          <i class="fas fa-arrow-left mr-2"></i> Back to Theatre Cases
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

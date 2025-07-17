@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Theatre Case | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+          <i class="fas fa-syringe text-green-600 mr-2"></i>Add New Theatre Case
+        </h1>
+        <a href="/doctor/theatre" class="text-sm text-blue-600 hover:underline">
+          ← Back to Theatre Cases
+        </a>
+      </div>
+
+      <!-- Form -->
+      <form action="/doctor/theatre" method="POST" class="space-y-5">
+        <!-- Case Name -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Patient Name <span class="text-red-500">*</span></label
+          >
+          <input
+            type="text"
+            name="caseName"
+            placeholder="e.g., Jenney Chris"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+        </div>
+
+        <!-- Hospital Number -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Hospital Number <span class="text-red-500">*</span></label
+          >
+          <input
+            type="text"
+            name="hospitalNumber"
+            placeholder="e.g., HSP-23456"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+        </div>
+
+        <!-- Date and Time -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Date & Time <span class="text-red-500">*</span></label
+          >
+          <input
+            type="datetime-local"
+            name="date"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+        </div>
+
+        <!-- Diagnosis -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Diagnosis <span class="text-red-500">*</span></label
+          >
+          <input
+            type="text"
+            name="diagnosis"
+            placeholder="e.g., Acute appendicitis"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+        </div>
+
+        <!-- Surgeon -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Surgeon <span class="text-red-500">*</span></label
+          >
+          <input
+            type="text"
+            name="surgeon"
+            placeholder="e.g., Dr. John Smith"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+        </div>
+
+        <!-- Assistant -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Assistant</label
+          >
+          <input
+            type="text"
+            name="assistant"
+            placeholder="e.g., Nurse Jenny"
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+        </div>
+
+        <!-- Remarks -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Remarks</label
+          >
+          <textarea
+            name="remarks"
+            rows="3"
+            placeholder="Any additional notes..."
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          ></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            class="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded shadow transition-all duration-200"
+          >
+            <i class="fas fa-paper-plane mr-2"></i> Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

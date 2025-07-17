@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>New Immunization Schedule</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 p-6">
+    <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+      <h1 class="text-2xl font-bold mb-4 text-center">
+        Add New Immunization Schedule
+      </h1>
+
+      <form action="/nurse/immunizations/new" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-gray-700 font-medium"
+            >Types Of Vaccine</label
+          >
+          <input
+            type="text"
+            name="vaccineName"
+            required
+            class="w-full border px-3 py-2 rounded mt-1"
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium"
+            >Minimum Target Age</label
+          >
+          <input
+            type="text"
+            name="minimumTargetAge"
+            placeholder="e.g. 6 weeks, 9 months"
+            required
+            class="w-full border px-3 py-2 rounded mt-1"
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium">Dosage</label>
+          <select
+            name="dosage"
+            required
+            class="w-full border px-3 py-2 rounded mt-1"
+          >
+            <option value="">Select dosage</option>
+            <option value="0.5ml">0.5ml</option>
+            <option value="1ml">1ml</option>
+            <option value="2ml">2ml</option>
+            <option value="2 drops">2 Drops</option>
+            <option value="5 drops">5 Drops</option>
+            <option value="100.000 IU">100.000 IU</option>
+            <option value="200.000 IU">200.000 IU</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium"
+            >Route of Administration</label
+          >
+          <select
+            name="route"
+            required
+            class="w-full border px-3 py-2 rounded mt-1"
+          >
+            <option value="">Select route</option>
+            <option value="Oral">Oral</option>
+            <option value="Intramuscular">Intramuscular</option>
+            <option value="Subcutaneous">Subcutaneous</option>
+            <option value="Intradermal">Intradermal</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium">Site</label>
+          <input
+            type="text"
+            name="site"
+            placeholder="e.g. Left thigh, Right upper arm"
+            required
+            class="w-full border px-3 py-2 rounded mt-1"
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium"
+            >Notes (Optional)</label
+          >
+          <textarea
+            name="notes"
+            rows="3"
+            class="w-full border px-3 py-2 rounded mt-1"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-between items-center mt-4">
+          <a href="/nurse/immunizations" class="text-blue-600 hover:underline">
+            ← Back to List
+          </a>
+          <button
+            type="submit"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            Save Schedule
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

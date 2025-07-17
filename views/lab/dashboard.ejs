@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lab Dashboard | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white flex flex-col p-6">
+      <h2 class="text-2xl font-bold mb-6 text-center">Lab</h2>
+      <a
+        href="/lab/dashboard"
+        class="mb-2 px-3 py-2 rounded bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+      <a
+        href="/lab/requests"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-600 flex items-center gap-2"
+      >
+        <i class="fas fa-inbox"></i> Lab Requests
+      </a>
+      <a
+        href="/lab/results"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-600 flex items-center gap-2"
+      >
+        <i class="fas fa-vials"></i> Test Results
+      </a>
+      <a
+        href="/lab/reports"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-600 flex items-center gap-2"
+      >
+        <i class="fas fa-file-medical-alt"></i> Reports
+      </a>
+      <a
+        href="/auth/logout"
+        class="mt-auto bg-red-500 px-3 py-2 rounded hover:bg-red-600 flex items-center gap-2"
+      >
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fas fa-microscope text-green-600"></i> Welcome, Lab
+          Technician
+        </h1>
+        <span class="text-sm text-gray-600">Today: <%= today %></span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Card 1 -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-gray-600 text-sm mb-2 flex items-center gap-1">
+            <i class="fas fa-inbox text-yellow-500"></i> Pending Lab Requests
+          </h3>
+          <p class="text-2xl font-bold text-gray-800">
+            <%= pending_requests %>
+          </p>
+          <a
+            href="/lab/requests"
+            class="text-sm text-green-700 mt-3 inline-block hover:underline"
+            >View Requests →</a
+          >
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-gray-600 text-sm mb-2 flex items-center gap-1">
+            <i class="fas fa-check-circle text-green-500"></i> Completed Tests
+          </h3>
+          <p class="text-2xl font-bold text-gray-800"><%= completed_tests %></p>
+          <a
+            href="/lab/results"
+            class="text-sm text-green-700 mt-3 inline-block hover:underline"
+            >Check Results →</a
+          >
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-gray-600 text-sm mb-2 flex items-center gap-1">
+            <i class="fas fa-exclamation-triangle text-red-600"></i> Critical
+            Alerts
+          </h3>
+          <p class="text-2xl font-bold text-red-600">
+            <%= critical_alerts %> Results
+          </p>
+          <a
+            href="/lab/alerts"
+            class="text-sm text-green-700 mt-3 inline-block hover:underline"
+            >Review Alerts →</a
+          >
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-gray-600 text-sm mb-2 flex items-center gap-1">
+            <i class="fas fa-file-medical text-blue-600"></i> Reports Generated
+          </h3>
+          <p class="text-2xl font-bold text-gray-800">
+            <%= generated_reports %>
+          </p>
+          <a
+            href="/lab/reports"
+            class="text-sm text-green-700 mt-3 inline-block hover:underline"
+            >See Reports →</a
+          >
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

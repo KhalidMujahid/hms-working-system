@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New HMO Claim</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow mt-10">
+      <h2 class="text-xl font-bold mb-4 text-gray-800">Submit New HMO Claim</h2>
+
+      <form action="/hmo/claims" method="POST" class="space-y-4">
+        <div>
+          <label class="block font-medium text-gray-700">Patient</label>
+          <select
+            name="patientId"
+            required
+            class="w-full border border-gray-300 rounded p-2"
+          >
+            <% patients.forEach(patient => { %>
+            <option value="<%= patient._id %>">
+              <%= patient.firstName %> <%= patient.lastName %>
+            </option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700"
+            >Service Description</label
+          >
+          <textarea
+            name="serviceDescription"
+            rows="3"
+            class="w-full border border-gray-300 rounded p-2"
+            required
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700">Amount (₦)</label>
+          <input
+            type="number"
+            name="amount"
+            required
+            class="w-full border border-gray-300 rounded p-2"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Submit Claim
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

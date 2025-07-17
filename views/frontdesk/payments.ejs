@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Payments | Frontdesk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen font-sans">
+    <div class="p-6 max-w-7xl mx-auto">
+      <!-- Header -->
+      <div
+        class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6"
+      >
+        <h1 class="text-2xl font-bold text-gray-800">All Payments</h1>
+        <div class="flex items-center space-x-2">
+          <a
+            href="/frontdesk/payments/new"
+            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+          >
+            <i class="fas fa-plus mr-1"></i> New Payment
+          </a>
+          <button
+            onclick="location.reload()"
+            class="bg-white text-gray-600 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
+            title="Refresh"
+          >
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search and Filters -->
+      <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+          <div class="flex-1">
+            <input
+              type="text"
+              placeholder="Search by patient, reference, or purpose..."
+              class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              oninput="filterPayments(this.value)"
+            />
+          </div>
+
+          <div class="flex gap-3 items-center">
+            <select
+              class="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500"
+              onchange="filterByMethod(this.value)"
+            >
+              <option value="">All Methods</option>
+              <option value="cash">Cash</option>
+              <option value="card">Card</option>
+              <option value="transfer">Transfer</option>
+            </select>
+
+            <select
+              class="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500"
+              onchange="filterByDate(this.value)"
+            >
+              <option value="">All Dates</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-white shadow rounded-lg overflow-x-auto">
+        <% if (payments.length > 0) { %>
+        <table class="min-w-full table-auto">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="px-4 py-2 text-left">Patient</th>
+              <th class="px-4 py-2 text-left">Amount</th>
+              <th class="px-4 py-2 text-left">Method</th>
+              <th class="px-4 py-2 text-left">Purpose</th>
+              <th class="px-4 py-2 text-left">Reference</th>
+              <th class="px-4 py-2 text-left">Received By</th>
+              <th class="px-4 py-2 text-left">Date</th>
+              <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700" id="paymentsTable">
+            <% payments.forEach(payment => { %>
+            <tr class="border-b hover:bg-gray-50 transition duration-150">
+              <td class="px-4 py-2">
+                <%= payment.patient.firstName %> <%= payment.patient.lastName %>
+              </td>
+              <td class="px-4 py-2">₦<%= payment.amount.toLocaleString() %></td>
+              <td class="px-4 py-2 capitalize"><%= payment.method %></td>
+              <td class="px-4 py-2"><%= payment.purpose %></td>
+              <td class="px-4 py-2"><%= payment.reference %></td>
+              <td class="px-4 py-2"><%= payment.receivedBy.username %></td>
+              <td class="px-4 py-2">
+                <%= new Date(payment.createdAt).toLocaleDateString() %>
+              </td>
+              <td class="px-4 py-2 space-x-3">
+                <a
+                  href="/frontdesk/payments/<%= payment._id %>/edit"
+                  class="text-blue-600 hover:underline"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+                <form
+                  method="POST"
+                  action="/frontdesk/payments/<%= payment._id %>/delete"
+                  class="inline"
+                  onsubmit="return confirm('Delete this payment?');"
+                >
+                  <button type="submit" class="text-red-600 hover:underline">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } else { %>
+        <div class="p-6 text-center text-gray-500">
+          <i class="fas fa-money-check-alt text-4xl mb-2"></i>
+          <p>No payments found. Click “New Payment” to get started.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <script>
+      function filterPayments(value) {
+        const rows = document.querySelectorAll("#paymentsTable tr");
+        rows.forEach((row) => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(value.toLowerCase()) ? "" : "none";
+        });
+      }
+
+      function filterByMethod(method) {
+        const rows = document.querySelectorAll("#paymentsTable tr");
+        rows.forEach((row) => {
+          const methodCell = row.children[2]?.textContent?.toLowerCase();
+          row.style.display =
+            !method || methodCell.includes(method.toLowerCase()) ? "" : "none";
+        });
+      }
+
+      function filterByDate(range) {
+        alert("Date filter: " + range);
+      }
+    </script>
+  </body>
+</html>

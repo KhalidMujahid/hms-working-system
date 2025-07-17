@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Details | HMO</title>
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-blue-900 text-white p-6 hidden md:block">
+        <h2 class="text-2xl font-bold mb-8">
+          <i class="fas fa-hospital-user mr-2 text-white"></i>HMO Dashboard
+        </h2>
+        <nav class="space-y-4">
+          <a href="/hmo/dashboard" class="block hover:text-blue-300 transition">
+            <i class="fas fa-chart-line mr-2"></i>Dashboard
+          </a>
+          <a href="/hmo/patients" class="block hover:text-blue-300 transition">
+            <i class="fas fa-users mr-2"></i>Patients
+          </a>
+          <a href="/hmo/claims" class="block hover:text-blue-300 transition">
+            <i class="fas fa-file-invoice-dollar mr-2"></i>Claims
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6">
+        <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+          <!-- Page Heading -->
+          <h1
+            class="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-2"
+          >
+            <i class="fas fa-user-circle text-blue-600"></i> Patient Details
+          </h1>
+
+          <!-- Patient Info -->
+          <section class="space-y-4 text-gray-700">
+            <p>
+              <i class="fas fa-user mr-2 text-gray-500"></i>
+              <strong>Name:</strong> <%= patient.firstName %> <%=
+              patient.lastName %>
+            </p>
+            <p>
+              <i class="fas fa-envelope mr-2 text-gray-500"></i>
+              <strong>Email:</strong> <%= patient.email %>
+            </p>
+            <p>
+              <i class="fas fa-phone mr-2 text-gray-500"></i>
+              <strong>Phone:</strong> <%= patient.phone %>
+            </p>
+            <p>
+              <i class="fas fa-venus-mars mr-2 text-gray-500"></i>
+              <strong>Gender:</strong> <%= patient.gender %>
+            </p>
+            <p>
+              <i class="fas fa-calendar-alt mr-2 text-gray-500"></i>
+              <strong>Date of Birth:</strong> <%=
+              patient.dateOfBirth.toDateString() %>
+            </p>
+            <p>
+              <i class="fas fa-map-marker-alt mr-2 text-gray-500"></i>
+              <strong>Address:</strong>
+              <%= patient.address?.street %>, <%= patient.address?.city %>, <%=
+              patient.address?.state %>, <%= patient.address?.country || 'NG' %>
+            </p>
+          </section>
+
+          <!-- Insurance Info -->
+          <section class="mt-8">
+            <h2
+              class="text-xl font-semibold text-blue-800 mb-4 flex items-center gap-2"
+            >
+              <i class="fas fa-file-medical-alt text-blue-600"></i> Insurance
+              Info
+            </h2>
+            <div class="space-y-2">
+              <p>
+                <strong>Provider:</strong>
+                <%= patient.insurance?.provider || 'N/A' %>
+              </p>
+              <p>
+                <strong>Policy Number:</strong>
+                <%= patient.insurance?.policyNumber || 'N/A' %>
+              </p>
+              <p>
+                <strong>Group Number:</strong>
+                <%= patient.insurance?.groupNumber || 'N/A' %>
+              </p>
+            </div>
+          </section>
+
+          <!-- Actions -->
+          <div class="flex justify-between mt-10 items-center">
+            <a
+              href="/hmo/patients"
+              class="text-blue-600 hover:underline text-sm flex items-center"
+            >
+              <i class="fas fa-arrow-left mr-2"></i> Back to list
+            </a>
+            <a
+              href="/hmo/patients/<%= patient._id %>/edit"
+              class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+            >
+              <i class="fas fa-edit mr-2"></i> Edit Patient
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

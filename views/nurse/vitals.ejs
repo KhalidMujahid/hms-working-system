@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Record Vitals | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      class="w-64 min-h-screen bg-gradient-to-b from-green-700 to-green-800 text-white p-6 shadow-lg rounded-r-2xl"
+    >
+      <h2 class="text-2xl font-bold text-center mb-6 tracking-wide">
+        👩‍⚕️ Nurse Panel
+      </h2>
+
+      <nav class="space-y-2 text-base">
+        <a
+          href="/nurse/dashboard"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-home text-lg"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <a
+          href="/nurse/patients"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-user-nurse text-lg"></i>
+          <span>Patients</span>
+        </a>
+
+        <a
+          href="/nurse/vitals"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-heartbeat text-lg"></i>
+          <span>Record Vitals</span>
+        </a>
+
+        <a
+          href="/nurse/vitals/list"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-list text-lg"></i>
+          <span>Vitals List</span>
+        </a>
+
+        <a
+          href="/nurse/appointments"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-calendar-check text-lg"></i>
+          <span>Appointments</span>
+        </a>
+
+        <a
+          href="/nurse/medications"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-syringe text-lg"></i>
+          <span>Administer Meds</span>
+        </a>
+
+        <a
+          href="/nurse/reports"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-file-alt text-lg"></i>
+          <span>Reports</span>
+        </a>
+
+        <hr class="my-4 border-green-500" />
+
+        <a
+          href="/auth/logout"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-red-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-sign-out-alt text-lg"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-700">Record Patient Vitals</h1>
+        <span class="text-gray-500 text-sm"><%= today %></span>
+      </div>
+
+      <div class="bg-white shadow rounded-lg max-w-2xl mx-auto p-6">
+        <form action="/nurse/vitals" method="POST" class="space-y-4">
+          <div>
+            <label for="patient_id" class="font-semibold block mb-1"
+              >Select Patient</label
+            >
+            <select
+              id="patient_id"
+              name="patient_id"
+              required
+              class="w-full border px-3 py-2 rounded"
+            >
+              <option value="">-- Select --</option>
+              <% patients.forEach(p => { %>
+              <option value="<%= p._id %>">
+                <%= p.firstName %> <%= p.lastName %>
+              </option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div>
+            <label for="temperature" class="font-semibold block mb-1"
+              >Temperature (°C)</label
+            >
+            <input
+              type="number"
+              step="0.1"
+              id="temperature"
+              name="temperature"
+              required
+              class="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label for="blood_pressure" class="font-semibold block mb-1"
+              >Blood Pressure (mmHg)</label
+            >
+            <input
+              type="text"
+              id="blood_pressure"
+              name="blood_pressure"
+              placeholder="e.g., 120/80"
+              required
+              class="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label for="pulse" class="font-semibold block mb-1"
+              >Pulse Rate (bpm)</label
+            >
+            <input
+              type="number"
+              id="pulse"
+              name="pulse"
+              required
+              class="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label for="respiratory_rate" class="font-semibold block mb-1"
+              >Respiratory Rate (breaths/min)</label
+            >
+            <input
+              type="number"
+              id="respiratory_rate"
+              name="respiratory_rate"
+              required
+              class="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label for="height" class="font-semibold block mb-1"
+              >Height (M)</label
+            >
+            <input
+              type="number"
+              id="height"
+              name="height"
+              required
+              class="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label for="weight" class="font-semibold block mb-1"
+              >Weight (Kg)</label
+            >
+            <input
+              type="number"
+              id="weight"
+              name="weight"
+              required
+              class="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label for="notes" class="font-semibold block mb-1">Notes</label>
+            <input
+              type="text"
+              id="notes"
+              name="notes"
+              class="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="bg-green-700 text-white px-5 py-2 rounded hover:bg-green-800"
+          >
+            <i class="fas fa-save mr-2"></i> Submit Vitals
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

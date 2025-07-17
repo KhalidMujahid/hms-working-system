@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reports | EHRMS Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body class="bg-gray-100 min-h-screen flex text-gray-800">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-blue-700 text-white p-6 hidden md:flex flex-col">
+      <h2 class="text-2xl font-bold text-center mb-6">
+        <i class="fas fa-user-shield mr-2"></i>Admin
+      </h2>
+      <nav class="space-y-3">
+        <a
+          href="/admin/dashboard"
+          class="hover:bg-blue-800 px-4 py-2 rounded block"
+        >
+          <i class="fas fa-home mr-2"></i>Dashboard
+        </a>
+        <a
+          href="/admin/manage-users"
+          class="hover:bg-blue-800 px-4 py-2 rounded block"
+        >
+          <i class="fas fa-users mr-2"></i>Manage Users
+        </a>
+        <a href="/admin/logs" class="hover:bg-blue-800 px-4 py-2 rounded block">
+          <i class="fas fa-clipboard-list mr-2"></i>View Logs
+        </a>
+        <a href="/admin/reports" class="bg-blue-800 px-4 py-2 rounded block">
+          <i class="fas fa-chart-bar mr-2"></i>Reports
+        </a>
+        <a
+          href="/auth/logout"
+          class="mt-6 bg-red-600 hover:bg-red-700 px-4 py-2 rounded block text-center"
+        >
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold">Reports Overview</h1>
+        <span class="text-sm text-gray-500"
+          >Updated: <span id="date"></span
+        ></span>
+      </div>
+
+      <!-- Statistic Cards -->
+      <section
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+      >
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-gray-500 text-sm mb-1 flex items-center gap-2">
+            <i class="fas fa-user-plus text-blue-500"></i>Patients Registered
+            (This Month)
+          </h3>
+          <p class="text-blue-600 text-2xl font-semibold"><%= patients %></p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-gray-500 text-sm mb-1 flex items-center gap-2">
+            <i class="fas fa-stethoscope text-green-500"></i>Total Consultations
+          </h3>
+          <p class="text-green-600 text-2xl font-semibold">
+            <%= consultations %>
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-gray-500 text-sm mb-1 flex items-center gap-2">
+            <i class="fas fa-vials text-purple-500"></i>Lab Tests Completed
+          </h3>
+          <p class="text-purple-600 text-2xl font-semibold"><%= labs %></p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-gray-500 text-sm mb-1 flex items-center gap-2">
+            <i class="fas fa-pills text-indigo-500"></i>Prescriptions Issued
+          </h3>
+          <p class="text-indigo-600 text-2xl font-semibold">
+            <%= prescriptions %>
+          </p>
+        </div>
+        <div
+          class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition col-span-1 sm:col-span-2 lg:col-span-1"
+        >
+          <h3 class="text-gray-500 text-sm mb-1 flex items-center gap-2">
+            <i class="fas fa-wallet text-yellow-500"></i>Total Revenue
+          </h3>
+          <p class="text-yellow-600 text-2xl font-semibold">
+            ₦<%= revenue.toLocaleString() %>
+          </p>
+        </div>
+      </section>
+
+      <!-- Recent Billing Table -->
+      <section class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+          <i class="fas fa-file-invoice-dollar text-blue-500"></i>Recent Billing
+          Summary
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm border rounded">
+            <thead class="bg-gray-100 text-gray-600">
+              <tr>
+                <th class="text-left px-4 py-2">#</th>
+                <th class="text-left px-4 py-2">Patient</th>
+                <th class="text-left px-4 py-2">Date</th>
+                <th class="text-left px-4 py-2">Amount</th>
+                <th class="text-left px-4 py-2">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (recentBillings.length > 0) { %> <%
+              recentBillings.forEach((bill, i) => { %>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2"><%= i + 1 %></td>
+                <td class="px-4 py-2">
+                  <%= bill.patient_id?.full_name || "N/A" %>
+                </td>
+                <td class="px-4 py-2">
+                  <%= new Date(bill.createdAt).toLocaleDateString() %>
+                </td>
+                <td class="px-4 py-2">₦<%= bill.amount.toLocaleString() %></td>
+                <td class="px-4 py-2 capitalize">
+                  <% if (bill.status === 'Paid') { %>
+                  <span class="text-green-600 font-semibold"
+                    ><i class="fas fa-check-circle mr-1"></i><%= bill.status
+                    %></span
+                  >
+                  <% } else { %>
+                  <span class="text-yellow-600 font-semibold"
+                    ><i class="fas fa-exclamation-circle mr-1"></i><%=
+                    bill.status %></span
+                  >
+                  <% } %>
+                </td>
+              </tr>
+              <% }) %> <% } else { %>
+              <tr>
+                <td colspan="5" class="text-center text-gray-500 py-4">
+                  No recent billing records.
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.getElementById("date").textContent =
+        new Date().toLocaleDateString();
+    </script>
+  </body>
+</html>

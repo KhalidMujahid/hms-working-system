@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab Test Requests | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white flex flex-col p-6">
+      <h2 class="text-2xl font-bold mb-6 text-center">Lab</h2>
+      <a
+        href="/lab/dashboard"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+      <a
+        href="/lab/requests"
+        class="mb-2 px-3 py-2 bg-green-800 rounded flex items-center gap-2"
+      >
+        <i class="fas fa-inbox"></i> Lab Requests
+      </a>
+      <a
+        href="/lab/results"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-vials"></i> Test Results
+      </a>
+      <a
+        href="/lab/reports"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-file-medical"></i> Reports
+      </a>
+      <a
+        href="/auth/logout"
+        class="mt-auto px-3 py-2 bg-red-500 rounded hover:bg-red-600 flex items-center gap-2"
+      >
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-x-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Lab Test Requests</h1>
+        <span class="text-gray-600 text-sm">Today: <%= today %></span>
+      </div>
+
+      <table class="w-full table-auto bg-white shadow rounded">
+        <thead class="bg-green-700 text-white text-left">
+          <tr>
+            <th class="px-6 py-3 text-sm">Patient</th>
+            <th class="px-6 py-3 text-sm">Test Type</th>
+            <th class="px-6 py-3 text-sm">Date Requested</th>
+            <th class="px-6 py-3 text-sm">Status</th>
+            <th class="px-6 py-3 text-sm">Action</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-800">
+          <% requests.forEach(req => { %>
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-6 py-4"><%= req.patient_name %></td>
+            <td class="px-6 py-4"><%= req.test_type %></td>
+            <td class="px-6 py-4">
+              <%= new Date(req.requested_at).toISOString().slice(0, 10) %>
+            </td>
+            <td class="px-6 py-4">
+              <span
+                class="px-3 py-1 rounded text-xs font-semibold <%= req.status === 'Completed' ? 'bg-green-500 text-white' : 'bg-yellow-400 text-black' %>"
+              >
+                <%= req.status %>
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <% if (req.status === 'Pending') { %>
+              <form method="POST" action="/lab/requests/mark-completed">
+                <input type="hidden" name="request_id" value="<%= req._id %>" />
+                <button
+                  type="submit"
+                  class="bg-green-600 text-white px-3 py-1 text-sm rounded hover:bg-green-700"
+                >
+                  <i class="fas fa-check-circle"></i> Mark Completed
+                </button>
+              </form>
+              <% } else { %>
+              <button
+                class="bg-gray-300 text-white px-3 py-1 text-sm rounded cursor-not-allowed"
+                disabled
+              >
+                Done
+              </button>
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

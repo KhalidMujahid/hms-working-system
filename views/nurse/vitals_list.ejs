@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vitals List | Nurse Panel</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      class="w-64 min-h-screen bg-gradient-to-b from-green-700 to-green-800 text-white p-6 shadow-lg rounded-r-2xl"
+    >
+      <h2 class="text-2xl font-bold text-center mb-6 tracking-wide">
+        👩‍⚕️ Nurse Panel
+      </h2>
+
+      <nav class="space-y-2 text-base">
+        <a
+          href="/nurse/dashboard"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-home text-lg"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <a
+          href="/nurse/patients"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-user-nurse text-lg"></i>
+          <span>Patients</span>
+        </a>
+
+        <a
+          href="/nurse/vitals"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-heartbeat text-lg"></i>
+          <span>Record Vitals</span>
+        </a>
+
+        <a
+          href="/nurse/vitals/list"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-list text-lg"></i>
+          <span>Vitals List</span>
+        </a>
+
+        <a
+          href="/nurse/appointments"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-calendar-check text-lg"></i>
+          <span>Appointments</span>
+        </a>
+
+        <a
+          href="/nurse/medications"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-syringe text-lg"></i>
+          <span>Administer Meds</span>
+        </a>
+
+        <a
+          href="/nurse/reports"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-file-alt text-lg"></i>
+          <span>Reports</span>
+        </a>
+
+        <hr class="my-4 border-green-500" />
+
+        <a
+          href="/auth/logout"
+          class="flex items-center gap-3 p-3 rounded-lg hover:bg-red-600 hover:shadow-md transition duration-200"
+        >
+          <i class="fas fa-sign-out-alt text-lg"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 bg-gray-50 min-h-screen">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Vitals List</h1>
+        <a
+          href="/nurse/vitals"
+          class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow-md transition"
+        >
+          <i class="fas fa-plus-circle"></i>
+          <span>Record New</span>
+        </a>
+      </div>
+
+      <!-- Table Card -->
+      <div class="overflow-x-auto rounded-xl shadow-lg bg-white">
+        <table
+          class="min-w-full divide-y divide-gray-200 text-sm text-gray-700"
+        >
+          <thead class="bg-green-700 text-white sticky top-0 z-10">
+            <tr>
+              <th class="px-4 py-3 text-left">#</th>
+              <th class="px-4 py-3 text-left">Patient</th>
+              <th class="px-4 py-3 text-center">Temp (°C)</th>
+              <th class="px-4 py-3 text-center">BP</th>
+              <th class="px-4 py-3 text-center">Pulse</th>
+              <th class="px-4 py-3 text-center">Resp</th>
+              <th class="px-4 py-3 text-center">M</th>
+              <th class="px-4 py-3 text-center">Kg</th>
+              <th class="px-4 py-3 text-left">Notes</th>
+              <th class="px-4 py-3 text-left">Date</th>
+              <th class="px-4 py-3 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <% if (vitals.length > 0) { %> <% vitals.forEach((vital, index) => {
+            %>
+            <tr class="hover:bg-gray-50 transition">
+              <td class="px-4 py-3 font-medium"><%= index + 1 %></td>
+              <td class="px-4 py-3"><%= vital.patient_id.firstName %></td>
+              <td class="px-4 py-3 text-center"><%= vital.temperature %></td>
+              <td class="px-4 py-3 text-center"><%= vital.blood_pressure %></td>
+              <td class="px-4 py-3 text-center"><%= vital.pulse %></td>
+              <td class="px-4 py-3 text-center">
+                <%= vital.respiratory_rate %>
+              </td>
+              <td class="px-4 py-3"><%= vital.notes || "—" %></td>
+              <td class="px-4 py-3"><%= vital.recorded_at.toDateString() %></td>
+              <td class="px-4 py-3 text-center">
+                <div class="flex items-center justify-center gap-3">
+                  <a
+                    href="/nurse/vitals/edit/<%= vital._id %>"
+                    class="text-blue-600 hover:text-blue-800"
+                    title="Edit"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <form
+                    action="/nurse/vitals/delete/<%= vital._id %>"
+                    method="POST"
+                    class="inline"
+                    onsubmit="return confirm('Are you sure you want to delete this record?')"
+                  >
+                    <button
+                      type="submit"
+                      class="text-red-600 hover:text-red-800"
+                      title="Delete"
+                    >
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="9" class="text-center text-gray-500 px-4 py-6">
+                No vitals recorded yet.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

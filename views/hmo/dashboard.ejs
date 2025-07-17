@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HMO Dashboard | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body class="bg-gray-100 font-sans antialiased flex min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      class="w-64 bg-blue-900 text-white p-6 shadow-lg sticky top-0 h-screen flex flex-col"
+    >
+      <h2 class="text-3xl font-extrabold mb-10 text-center tracking-wide">
+        <i class="fas fa-hospital-symbol mr-2"></i>HMO
+      </h2>
+      <nav class="space-y-3 text-sm">
+        <a
+          href="/hmo/dashboard"
+          class="flex items-center gap-3 px-4 py-2 bg-blue-800 hover:bg-blue-700 rounded transition"
+        >
+          <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a
+          href="/hmo/patients"
+          class="flex items-center gap-3 px-4 py-2 hover:bg-blue-800 rounded transition"
+        >
+          <i class="fas fa-users"></i> Patients
+        </a>
+        <a
+          href="/hmo/claims"
+          class="flex items-center gap-3 px-4 py-2 hover:bg-blue-800 rounded transition"
+        >
+          <i class="fas fa-file-invoice-dollar"></i> Claims
+        </a>
+        <a
+          href="/auth/logout"
+          class="mt-auto flex items-center gap-3 px-4 py-2 bg-red-500 hover:bg-red-600 rounded transition"
+        >
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 overflow-y-auto">
+      <!-- Header -->
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4"
+      >
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+          <nav class="text-sm text-gray-500 mt-1">
+            <i class="fas fa-home mr-1"></i> Home
+            <span class="mx-1">/</span> Dashboard
+          </nav>
+        </div>
+
+        <!-- Search + Refresh -->
+        <div class="flex items-center gap-3">
+          <input
+            id="cardSearch"
+            type="text"
+            placeholder="Quick search cards..."
+            class="px-4 py-2 border rounded shadow-sm text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-400"
+            oninput="filterCards()"
+          />
+          <button
+            onclick="refreshData()"
+            class="bg-gray-200 text-gray-800 px-4 py-2 rounded shadow hover:bg-gray-300 transition flex items-center gap-2 text-sm"
+          >
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div
+        id="cardsGrid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
+        <!-- Card: Insured Patients -->
+        <div
+          class="card bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+          data-title="Insured Patients"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm text-gray-500">Insured Patients</h3>
+            <i class="fas fa-user-shield text-blue-700 text-xl"></i>
+          </div>
+          <p class="text-3xl font-bold text-blue-800"><%= insuredPatients %></p>
+          <canvas id="spark-insured" height="50"></canvas>
+        </div>
+
+        <!-- Card: Pending Claims -->
+        <div
+          class="card bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+          data-title="Pending Claims"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm text-gray-500">Pending Claims</h3>
+            <i class="fas fa-clock text-yellow-500 text-xl"></i>
+          </div>
+          <p class="text-3xl font-bold text-yellow-600"><%= pendingClaims %></p>
+          <canvas id="spark-pending" height="50"></canvas>
+        </div>
+
+        <!-- Card: Approved Claims -->
+        <div
+          class="card bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+          data-title="Approved Claims"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm text-gray-500">Approved Claims</h3>
+            <i class="fas fa-check-circle text-green-500 text-xl"></i>
+          </div>
+          <p class="text-3xl font-bold text-green-600"><%= approvedClaims %></p>
+          <canvas id="spark-approved" height="50"></canvas>
+        </div>
+
+        <!-- Card: Total Payouts -->
+        <div
+          class="card bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+          data-title="Total Payouts"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm text-gray-500">Total Payouts</h3>
+            <i class="fas fa-money-bill-wave text-gray-600 text-xl"></i>
+          </div>
+          <p class="text-3xl font-bold text-gray-800">
+            ₦<%= totalPayout.toLocaleString() %>
+          </p>
+          <canvas id="spark-payouts" height="50"></canvas>
+        </div>
+      </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+      const sparkData = {
+        'spark-insured': [40, 45, 50, 55, 60, <%= insuredPatients %>],
+        'spark-pending': [5, 10, 12, 14, 13, <%= pendingClaims %>],
+        'spark-approved': [20, 22, 25, 27, 30, <%= approvedClaims %>],
+        'spark-payouts': [80000, 82000, 85000, 88000, 90000, <%= totalPayout %>],
+      };
+
+      Object.entries(sparkData).forEach(([id, data]) => {
+        const ctx = document.getElementById(id).getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.map((_, i) => i + 1),
+            datasets: [{
+              data,
+              borderColor: '#3b82f6',
+              backgroundColor: 'transparent',
+              tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { display: false },
+              y: { display: false }
+            }
+          }
+        });
+      });
+
+      // Quick search for cards
+      function filterCards() {
+        const query = document.getElementById('cardSearch').value.toLowerCase();
+        document.querySelectorAll('.card').forEach(card => {
+          const title = card.dataset.title.toLowerCase();
+          card.style.display = title.includes(query) ? '' : 'none';
+        });
+      }
+
+      // Refresh data
+      function refreshData() {
+        location.reload();
+      }
+    </script>
+  </body>
+</html>

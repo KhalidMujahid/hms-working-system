@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pharmacy Dashboard | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="flex min-h-screen bg-gray-100 text-gray-800">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white flex flex-col p-6">
+      <h2 class="text-2xl font-bold mb-6 text-center">Pharmacy</h2>
+      <a
+        href="/pharmacy/dashboard"
+        class="mb-2 px-3 py-2 rounded bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+      <a
+        href="/pharmacy/inventory"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-pills"></i> Inventory
+      </a>
+      <a
+        href="/auth/logout"
+        class="mt-auto px-3 py-2 bg-red-500 rounded hover:bg-red-600 flex items-center gap-2"
+      >
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Welcome, Pharmacist</h1>
+        <span class="text-sm text-gray-600">Today: <%= today %></span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white shadow rounded p-4">
+          <h3 class="text-sm text-gray-500">Total Medications</h3>
+          <p class="text-3xl font-bold mt-2"><%= medications %></p>
+          <a
+            href="/pharmacy/inventory"
+            class="text-sm text-green-700 hover:underline mt-3 inline-block"
+            >View Inventory →</a
+          >
+        </div>
+        <div class="bg-white shadow rounded p-4">
+          <h3 class="text-sm text-gray-500">Pending Prescriptions</h3>
+          <p class="text-3xl font-bold mt-2"><%= pending_prescriptions %></p>
+          <a
+            href="/pharmacy/prescriptions"
+            class="text-sm text-green-700 hover:underline mt-3 inline-block"
+            >Check Now →</a
+          >
+        </div>
+        <div class="bg-white shadow rounded p-4">
+          <h3 class="text-sm text-gray-500">Out of Stock</h3>
+          <p class="text-3xl font-bold mt-2"><%= out_of_stock %></p>
+          <a
+            href="/pharmacy/inventory"
+            class="text-sm text-green-700 hover:underline mt-3 inline-block"
+            >Restock →</a
+          >
+        </div>
+        <div class="bg-white shadow rounded p-4">
+          <h3 class="text-sm text-gray-500">Today’s Dispensed</h3>
+          <p class="text-3xl font-bold mt-2"><%= todays_dispensed %></p>
+          <a
+            href="/pharmacy/dispensed"
+            class="text-sm text-green-700 hover:underline mt-3 inline-block"
+            >View Details →</a
+          >
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

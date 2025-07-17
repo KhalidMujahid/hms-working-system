@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Prescription | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      .sidebar-item:hover {
+        background-color: #47a05f;
+        transition: background-color 0.3s ease;
+      }
+      .input-field {
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        transition: border-color 0.3s ease;
+      }
+      .input-field:focus {
+        border-color: #38a169;
+      }
+      .add-btn:hover {
+        color: #2f855a;
+      }
+      .submit-btn {
+        background-color: #48bb78;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-600 text-white p-6 hidden md:block">
+      <h2 class="text-2xl font-bold mb-8 text-center">Doctor Panel</h2>
+      <nav class="space-y-3">
+        <a
+          href="/doctor/dashboard"
+          class="block sidebar-item px-4 py-2 rounded"
+        >
+          <i class="fas fa-home mr-2"></i> Dashboard
+        </a>
+        <a href="/doctor/patients" class="block sidebar-item px-4 py-2 rounded">
+          <i class="fas fa-user-injured mr-2"></i> Patients
+        </a>
+        <a
+          href="/doctor/appointments"
+          class="block sidebar-item px-4 py-2 rounded"
+        >
+          <i class="fas fa-calendar-alt mr-2"></i> Appointments
+        </a>
+        <a href="/doctor/ehr" class="block sidebar-item px-4 py-2 rounded">
+          <i class="fas fa-notes-medical mr-2"></i> EHR
+        </a>
+        <a
+          href="/doctor/prescriptions"
+          class="block sidebar-item px-4 py-2 rounded bg-green-700"
+        >
+          <i class="fas fa-pills mr-2"></i> Prescriptions
+        </a>
+        <a href="/logout" class="block sidebar-item px-4 py-2 rounded">
+          <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-semibold text-gray-800">
+          Create Prescription
+        </h1>
+      </div>
+
+      <form
+        action="/doctor/prescriptions/create"
+        method="POST"
+        class="bg-white p-6 rounded-lg shadow-md space-y-6"
+      >
+        <div>
+          <label
+            for="patient_id"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Select Patient</label
+          >
+          <select
+            id="patient_id"
+            name="patient_id"
+            required
+            class="w-full input-field"
+          >
+            <% patients.forEach(patient => { %>
+            <option value="<%= patient._id %>">
+              <%= patient.firstName %> <%= patient.lastName %>
+            </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div id="medications" class="space-y-4">
+          <!-- First Medication Input -->
+          <div class="grid md:grid-cols-4 gap-4 items-end medication">
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Drug Name</label
+              >
+              <input
+                name="medications[0][name]"
+                required
+                type="text"
+                class="w-full input-field"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Dosage</label
+              >
+              <input
+                name="medications[0][dosage]"
+                required
+                type="text"
+                class="w-full input-field"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Frequency</label
+              >
+              <input
+                name="medications[0][frequency]"
+                required
+                type="text"
+                class="w-full input-field"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Duration</label
+              >
+              <input
+                name="medications[0][duration]"
+                required
+                type="text"
+                class="w-full input-field"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          id="add-medication"
+          class="text-sm text-green-700 font-medium flex items-center add-btn"
+        >
+          <i class="fas fa-plus-circle mr-1"></i> Add Another Medication
+        </button>
+
+        <div>
+          <label
+            for="notes"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Additional Notes</label
+          >
+          <textarea
+            name="notes"
+            id="notes"
+            rows="4"
+            class="w-full input-field"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="submit-btn hover:bg-green-700 text-white font-medium py-2 px-6 rounded-full flex items-center justify-center w-full md:w-auto"
+        >
+          <i class="fas fa-paper-plane mr-1"></i> Submit Prescription
+        </button>
+      </form>
+    </main>
+
+    <!-- Script to add more medication fields -->
+    <script>
+      let medIndex = 1;
+      document
+        .getElementById("add-medication")
+        .addEventListener("click", () => {
+          const container = document.createElement("div");
+          container.className =
+            "grid md:grid-cols-4 gap-4 items-end medication";
+          container.innerHTML = `
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Drug Name</label>
+            <input name="medications[${medIndex}][name]" required type="text" class="w-full input-field" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Dosage</label>
+            <input name="medications[${medIndex}][dosage]" required type="text" class="w-full input-field" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Frequency</label>
+            <input name="medications[${medIndex}][frequency]" required type="text" class="w-full input-field" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Duration</label>
+            <input name="medications[${medIndex}][duration]" required type="text" class="w-full input-field" />
+          </div>`;
+          document.getElementById("medications").appendChild(container);
+          medIndex++;
+        });
+    </script>
+  </body>
+</html>

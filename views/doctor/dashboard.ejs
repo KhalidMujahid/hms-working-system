@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Doctor Dashboard | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="flex bg-gray-100 text-gray-800 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white hidden md:flex flex-col p-6">
+      <h2 class="text-2xl font-bold text-center mb-6">
+        <i class="fas fa-user-md mr-2"></i>Doctor Panel
+      </h2>
+      <nav class="space-y-3">
+        <a
+          href="/doctor/dashboard"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-home mr-2"></i>Dashboard</a
+        >
+        <a
+          href="/doctor/patients"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-user-injured mr-2"></i>My Patients</a
+        >
+        <a
+          href="/doctor/appointments"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-calendar-check mr-2"></i>Appointments</a
+        >
+        <a
+          href="/doctor/prescriptions"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-prescription-bottle-alt mr-2"></i>Prescriptions</a
+        >
+        <a
+          href="/doctor/lab-requests"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-vials mr-2"></i>Lab Requests</a
+        >
+        <a
+          href="/doctor/observations"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-notes-medical"></i>
+          <span>Observations</span>
+        </a>
+        <a
+          href="/doctor/theatre"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-syringe"></i>
+          <span>Theatre Case</span>
+        </a>
+        <a
+          href="/auth/logout"
+          class="mt-6 text-red-200 hover:text-white hover:bg-red-600 px-3 py-2 rounded block"
+          ><i class="fas fa-sign-out-alt mr-2"></i>Logout</a
+        >
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Welcome, Dr. <%= doctorName %></h1>
+        <span class="text-sm text-gray-500"
+          >Today: <span id="date"></span
+        ></span>
+      </div>
+
+      <!-- Metrics Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-5 rounded-lg shadow hover:shadow-md">
+          <h3 class="text-sm text-gray-600 mb-1">
+            <i class="fas fa-user-injured mr-1 text-green-600"></i>Assigned
+            Patients
+          </h3>
+          <p class="text-2xl font-bold text-green-600">
+            <%= assignedPatients %>
+          </p>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow hover:shadow-md">
+          <h3 class="text-sm text-gray-600 mb-1">
+            <i class="fas fa-calendar-day mr-1 text-yellow-600"></i>Appointments
+            Today
+          </h3>
+          <p class="text-2xl font-bold text-yellow-600">
+            <%= appointmentsToday %>
+          </p>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow hover:shadow-md">
+          <h3 class="text-sm text-gray-600 mb-1">
+            <i class="fas fa-pills mr-1 text-blue-600"></i>Prescriptions Issued
+          </h3>
+          <p class="text-2xl font-bold text-blue-600">
+            <%= totalPrescriptions %>
+          </p>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow hover:shadow-md">
+          <h3 class="text-sm text-gray-600 mb-1">
+            <i class="fas fa-vial mr-1 text-purple-600"></i>Pending Lab Requests
+          </h3>
+          <p class="text-2xl font-bold text-purple-600"><%= pendingLabs %></p>
+        </div>
+      </div>
+
+      <!-- Quick Action Links -->
+      <div class="mb-8 flex flex-wrap gap-4">
+        <a
+          href="/doctor/appointments"
+          class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded shadow"
+          ><i class="fas fa-calendar-check mr-2"></i>View Appointments</a
+        >
+        <a
+          href="/doctor/patients"
+          class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded shadow"
+          ><i class="fas fa-user-injured mr-2"></i>See Patients</a
+        >
+      </div>
+
+      <!-- Upcoming Appointments Table -->
+      <div class="bg-white p-5 rounded-lg shadow mb-8">
+        <h2 class="text-lg font-semibold mb-4">
+          <i class="fas fa-calendar-alt mr-2 text-blue-600"></i>Upcoming
+          Appointments
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="bg-gray-100 text-gray-600">
+              <tr>
+                <th class="px-4 py-2 text-left">#</th>
+                <th class="px-4 py-2 text-left">Patient</th>
+                <th class="px-4 py-2 text-left">Date</th>
+                <th class="px-4 py-2 text-left">Time</th>
+                <th class="px-4 py-2 text-left">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (upcomingAppointments.length > 0) { %> <%
+              upcomingAppointments.forEach((appt, i) => { %>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2"><%= i + 1 %></td>
+                <td class="px-4 py-2"><%= appt.patient_name %></td>
+                <td class="px-4 py-2">
+                  <%= new Date(appt.appointment_date).toLocaleDateString() %>
+                </td>
+                <td class="px-4 py-2"><%= appt.appointment_time %></td>
+                <td class="px-4 py-2 capitalize"><%= appt.status %></td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="5" class="text-center py-4 text-gray-500">
+                  No upcoming appointments.
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Prescriptions -->
+      <div class="bg-white p-5 rounded-lg shadow mb-8">
+        <h2 class="text-lg font-semibold mb-4">
+          <i class="fas fa-pills mr-2 text-blue-500"></i>Recent Prescriptions
+        </h2>
+        <ul class="space-y-2 text-sm">
+          <% recentPrescriptions.forEach((pres) => { %>
+          <li class="flex justify-between border-b pb-2">
+            <span><%= pres.patient_name %> - <%= pres.medicine_name %></span>
+            <span class="text-gray-500"
+              ><%= new Date(pres.date).toLocaleDateString() %></span
+            >
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+
+      <!-- Recent Lab Requests -->
+      <div class="bg-white p-5 rounded-lg shadow">
+        <h2 class="text-lg font-semibold mb-4">
+          <i class="fas fa-vial mr-2 text-purple-500"></i>Recent Lab Requests
+        </h2>
+        <ul class="space-y-2 text-sm">
+          <% recentLabs.forEach((lab) => { %>
+          <li class="flex justify-between border-b pb-2">
+            <span><%= lab.patient_name %> - <%= lab.test_name %></span>
+            <span class="text-gray-500"><%= lab.status %></span>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+    </main>
+
+    <script>
+      document.getElementById("date").textContent =
+        new Date().toLocaleDateString();
+    </script>
+  </body>
+</html>

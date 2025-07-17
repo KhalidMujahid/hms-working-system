@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit User | Admin | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body class="bg-gray-100 text-gray-800 min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-blue-700 text-white hidden md:flex flex-col p-6">
+      <h2 class="text-2xl font-bold text-center mb-6">
+        <i class="fas fa-user-shield mr-2"></i>Admin
+      </h2>
+      <nav class="space-y-3">
+        <a href="/admin/dashboard" class="hover:bg-blue-800 px-3 py-2 rounded block">
+          <i class="fas fa-home mr-2"></i>Dashboard
+        </a>
+        <a href="/admin/manage-users" class="bg-blue-800 px-3 py-2 rounded block">
+          <i class="fas fa-users mr-2"></i>Manage Users
+        </a>
+        <a href="/admin/logs" class="hover:bg-blue-800 px-3 py-2 rounded block">
+          <i class="fas fa-clipboard-list mr-2"></i>View Logs
+        </a>
+        <a href="/admin/reports" class="hover:bg-blue-800 px-3 py-2 rounded block">
+          <i class="fas fa-chart-bar mr-2"></i>Reports
+        </a>
+        <a href="/logout" class="mt-6 text-red-200 hover:text-white hover:bg-red-600 px-3 py-2 rounded block">
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 p-6">
+      <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">Edit User</h1>
+
+        <form
+          action="/admin/edit-user/<%= user._id %>"
+          method="POST"
+          class="space-y-4"
+        >
+          <!-- Username -->
+          <div>
+            <label for="username" class="block font-semibold text-sm mb-1">Username</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              value="<%= user.username %>"
+              class="w-full px-4 py-2 border rounded"
+              required
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block font-semibold text-sm mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value="<%= user.email %>"
+              class="w-full px-4 py-2 border rounded"
+              required
+            />
+          </div>
+
+          <!-- Role -->
+          <div>
+            <label for="role" class="block font-semibold text-sm mb-1">Role</label>
+            <select name="role" id="role" class="w-full px-4 py-2 border rounded" required>
+              <option value="">-- Select Role --</option>
+              <% const roles = ["admin", "doctor", "nurse", "pharmacy", "lab", "frontdesk", "hmo"]; %>
+              <% roles.forEach(function (r) { %>
+                <option value="<%= r %>" <%= user.role === r ? "selected" : "" %>>
+                  <%= r.charAt(0).toUpperCase() + r.slice(1) %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <!-- Status -->
+          <div>
+            <label for="status" class="block font-semibold text-sm mb-1">Status</label>
+            <select name="status" id="status" class="w-full px-4 py-2 border rounded">
+              <option value="1" <%= user.status == "1" ? "selected" : "" %>>Active</option>
+              <option value="0" <%= user.status == "0" ? "selected" : "" %>>Inactive</option>
+            </select>
+          </div>
+
+          <!-- New Password -->
+          <div>
+            <label for="password" class="block font-semibold text-sm mb-1">New Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Leave blank to keep current password"
+              class="w-full px-4 py-2 border rounded"
+            />
+          </div>
+
+          <!-- Submit -->
+          <div class="flex justify-between mt-6">
+            <a href="/admin/manage-users" class="text-gray-600 hover:underline">
+              <i class="fas fa-arrow-left mr-1"></i> Back
+            </a>
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded"
+            >
+              <i class="fas fa-save mr-1"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prescriptions | EHRMS</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="flex bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white hidden md:flex flex-col p-6">
+      <h2 class="text-2xl font-bold text-center mb-6">
+        <i class="fas fa-user-md mr-2"></i>Doctor Panel
+      </h2>
+      <nav class="space-y-3">
+        <a
+          href="/doctor/dashboard"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-home mr-2"></i>Dashboard</a
+        >
+        <a
+          href="/doctor/patients"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-user-injured mr-2"></i>My Patients</a
+        >
+        <a
+          href="/doctor/appointments"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-calendar-check mr-2"></i>Appointments</a
+        >
+        <a
+          href="/doctor/prescriptions"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-prescription-bottle-alt mr-2"></i>Prescriptions</a
+        >
+        <a
+          href="/doctor/lab-requests"
+          class="hover:bg-green-800 px-3 py-2 rounded block"
+          ><i class="fas fa-vials mr-2"></i>Lab Requests</a
+        >
+        <a
+          href="/doctor/observations"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-notes-medical"></i>
+          <span>Observations</span>
+        </a>
+        <a
+          href="/doctor/theatre"
+          class="flex items-center gap-2 px-3 py-2 rounded hover:bg-green-800 text-white"
+        >
+          <i class="fas fa-syringe"></i>
+          <span>Theatre Case</span>
+        </a>
+        <a
+          href="/auth/logout"
+          class="mt-6 text-red-200 hover:text-white hover:bg-red-600 px-3 py-2 rounded block"
+          ><i class="fas fa-sign-out-alt mr-2"></i>Logout</a
+        >
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto relative">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-700">Prescriptions History</h1>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-500">Total: <%= prescriptions.length %></span>
+          <button
+            onclick="toggleDrawer(true)"
+            class="inline-flex items-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm shadow"
+          >
+            <i class="fas fa-plus mr-2"></i> New Prescription
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-white rounded-lg shadow p-4">
+        <table class="w-full table-auto text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-left">
+              <th class="p-3">#</th>
+              <th class="p-3">Patient</th>
+              <th class="p-3">Date</th>
+              <th class="p-3">Drug</th>
+              <th class="p-3">Dosage</th>
+              <th class="p-3">Duration</th>
+              <th class="p-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (prescriptions.length > 0) { %> <% prescriptions.forEach((p,
+            index) => { %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-3"><%= index + 1 %></td>
+              <td class="p-3"><%= p.full_name %></td>
+              <td class="p-3"><%= p.date %></td>
+              <td class="p-3"><%= p.drug_name %></td>
+              <td class="p-3"><%= p.dosage %></td>
+              <td class="p-3"><%= p.duration %></td>
+              <td class="p-3">
+                <a
+                  href="/doctor/view-patient/<%= p.id %>"
+                  class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm"
+                >
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center py-4 text-gray-500">
+                No prescriptions found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Drawer -->
+      <div id="drawer" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden">
+        <div
+          class="absolute right-0 top-0 h-full w-full sm:w-[450px] bg-white shadow-lg p-6 overflow-y-auto"
+          onclick="event.stopPropagation()"
+        >
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-700">
+              <i class="fas fa-pills mr-2 text-green-600"></i> New Prescription
+            </h2>
+            <button
+              onclick="toggleDrawer(false)"
+              class="text-gray-600 hover:text-red-500 text-xl"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <!-- Form -->
+          <form
+            action="/doctor/prescriptions/create"
+            method="POST"
+            class="space-y-4"
+          >
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Patient</label
+              >
+              <select
+                name="patient_id"
+                class="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-green-500"
+              >
+                <% patients.forEach(p => { %>
+                <option value="<%= p._id %>">
+                  <%= p.firstName %> <%= p.lastName %>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Drug Name</label
+              >
+              <input
+                type="text"
+                name="medications[0][name]"
+                required
+                class="w-full mt-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-green-500"
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Dosage</label
+                >
+                <input
+                  type="text"
+                  name="medications[0][dosage]"
+                  required
+                  class="w-full mt-1 border border-gray-300 rounded px-3 py-2"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Frequency</label
+                >
+                <input
+                  type="text"
+                  name="medications[0][frequency]"
+                  required
+                  class="w-full mt-1 border border-gray-300 rounded px-3 py-2"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Duration</label
+              >
+              <input
+                type="text"
+                name="medications[0][duration]"
+                required
+                class="w-full mt-1 border border-gray-300 rounded px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Notes</label
+              >
+              <textarea
+                name="notes"
+                rows="3"
+                class="w-full mt-1 border border-gray-300 rounded px-3 py-2"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
+            >
+              <i class="fas fa-save mr-1"></i> Submit Prescription
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function toggleDrawer(show) {
+        const drawer = document.getElementById("drawer");
+        drawer.classList.toggle("hidden", !show);
+      }
+    </script>
+  </body>
+</html>

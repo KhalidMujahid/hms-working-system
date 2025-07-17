@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>New Appointment | EHRMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
+      <h1 class="text-2xl font-bold text-center text-green-700 mb-6">
+        <i class="fas fa-calendar-plus"></i> New Appointment
+      </h1>
+
+      <form
+        action="/frontdesk/appointments/new"
+        method="POST"
+        class="space-y-6"
+      >
+        <div>
+          <label class="block mb-1 font-medium">Patient</label>
+          <select
+            name="patient"
+            required
+            class="w-full border px-4 py-2 rounded"
+          >
+            <% patients.forEach(patient => { %>
+            <option value="<%= patient._id %>">
+              <%= patient.firstName %> <%= patient.lastName %> - <%=
+              patient.phone %>
+            </option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Doctor</label>
+          <select
+            name="doctor"
+            required
+            class="w-full border px-4 py-2 rounded"
+          >
+            <% doctors.forEach(doctor => { %>
+            <option value="<%= doctor._id %>">
+              <%= doctor.username %> (<%= doctor.role %>)
+            </option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-1 font-medium">Appointment Date</label>
+            <input
+              type="date"
+              name="appointmentDate"
+              class="w-full border px-4 py-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block mb-1 font-medium">Appointment Time</label>
+            <input
+              type="time"
+              name="time"
+              class="w-full border px-4 py-2 rounded"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Reason</label>
+          <input
+            type="text"
+            name="reason"
+            class="w-full border px-4 py-2 rounded"
+            placeholder="Brief reason for visit"
+          />
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Notes (optional)</label>
+          <textarea
+            name="notes"
+            class="w-full border px-4 py-2 rounded"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-between items-center mt-6">
+          <a
+            href="/frontdesk/appointments"
+            class="text-gray-600 hover:underline"
+          >
+            <i class="fas fa-arrow-left"></i> Back
+          </a>
+          <button
+            type="submit"
+            class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+          >
+            <i class="fas fa-save"></i> Book Appointment
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

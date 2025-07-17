@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointment Details | Doctor</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-3xl bg-white shadow-xl rounded-lg p-8">
+      <h1 class="text-3xl font-bold text-blue-700 text-center mb-8">
+        🩺 Appointment Details
+      </h1>
+
+      <div class="space-y-6 text-gray-700">
+        <div>
+          <h2 class="font-semibold text-sm text-gray-500">Patient Name</h2>
+          <p class="text-lg font-medium">
+            <%= appointment.patient ? `${appointment.patient.firstName} ${appointment.patient.lastName}` : 'N/A' %>
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-sm text-gray-500">Appointment Time</h2>
+          <p class="text-lg font-medium">
+            <%= appointment.appointmentDate.toLocaleDateString() %> at <%= appointment.time %>
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-sm text-gray-500">Reason for Visit</h2>
+          <p class="text-lg"><%= appointment.reason || 'Not specified' %></p>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-sm text-gray-500 mb-1">Appointment Status</h2>
+          <form
+            action="/doctor/update-appointment-status/<%= appointment._id %>"
+            method="POST"
+            class="flex flex-col sm:flex-row items-start sm:items-center gap-4"
+          >
+            <select
+              name="status"
+              id="status"
+              class="border border-gray-300 rounded-md px-4 py-2 w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Scheduled" <%= appointment.status === 'Scheduled' ? 'selected' : '' %>>Scheduled</option>
+              <option value="Completed" <%= appointment.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+              <option value="Cancelled" <%= appointment.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+            </select>
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md transition"
+            >
+              Update Status
+            </button>
+          </form>
+        </div>
+
+<% if (appointment.patient) { %>
+  <div class="mt-6 flex flex-col sm:flex-row gap-4">
+    <a
+      href="/doctor/prescriptions"
+      class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md transition"
+    >
+      💊 Prescribe Medication
+    </a>
+
+    <a
+      href="/patient/patient/view/<%= appointment.patient._id %>"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center bg-gray-800 hover:bg-gray-900 text-white px-5 py-2 rounded-md transition"
+    >
+      🧑‍⚕️ View Patient Profile
+    </a>
+  </div>
+<% } %>
+
+
+
+        <hr class="my-6 border-gray-200" />
+
+        <div class="text-center">
+          <a
+            href="/doctor/appointments"
+            class="text-blue-600 hover:underline text-sm"
+          >
+            &larr; Back to Appointments
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

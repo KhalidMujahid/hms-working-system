@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab Reports | EHRMS</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-700 text-white flex flex-col p-6">
+      <h2 class="text-2xl font-bold mb-6 text-center">Lab</h2>
+      <a
+        href="/lab/dashboard"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+      <a
+        href="/lab/requests"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-inbox"></i> Lab Requests
+      </a>
+      <a
+        href="/lab/results"
+        class="mb-2 px-3 py-2 rounded hover:bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-vials"></i> Test Results
+      </a>
+      <a
+        href="/lab/reports"
+        class="mb-2 px-3 py-2 rounded bg-green-800 flex items-center gap-2"
+      >
+        <i class="fas fa-file-medical"></i> Reports
+      </a>
+      <a
+        href="/auth/logout"
+        class="mt-auto px-3 py-2 bg-red-500 rounded hover:bg-red-600 flex items-center gap-2"
+      >
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Lab Reports</h1>
+        <span class="text-gray-600 text-sm">Today: <%= today %></span>
+      </div>
+
+      <!-- Filter Form -->
+      <form
+        method="GET"
+        action="/lab/reports"
+        class="flex flex-wrap items-end gap-4 mb-6 bg-white p-4 rounded shadow"
+      >
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 mb-1"
+            for="start"
+          >
+            <i class="fas fa-calendar-alt mr-1 text-green-700"></i> Start Date
+          </label>
+          <input
+            type="date"
+            name="start"
+            id="start"
+            class="border rounded px-4 py-2 w-full"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="end">
+            <i class="fas fa-calendar-alt mr-1 text-green-700"></i> End Date
+          </label>
+          <input
+            type="date"
+            name="end"
+            id="end"
+            class="border rounded px-4 py-2 w-full"
+          />
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 mb-1"
+            for="test"
+          >
+            <i class="fas fa-flask mr-1 text-green-700"></i> Test Type
+          </label>
+          <select name="test" id="test" class="border rounded px-4 py-2 w-full">
+            <option value="">All Types</option>
+            <option value="Blood Test">Blood Test</option>
+            <option value="Malaria Test">Malaria Test</option>
+            <option value="COVID-19 PCR">COVID-19 PCR</option>
+          </select>
+        </div>
+        <div>
+          <button
+            type="submit"
+            class="mt-6 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center gap-2"
+          >
+            <i class="fas fa-filter"></i> Filter
+          </button>
+        </div>
+      </form>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Total Tests</h3>
+          <p class="text-2xl font-bold text-gray-800"><%= total_tests %></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Completed Tests</h3>
+          <p class="text-2xl font-bold text-gray-800"><%= completed_tests %></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Pending Tests</h3>
+          <p class="text-2xl font-bold text-gray-800"><%= pending_tests %></p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="text-sm text-gray-500">Abnormal Results</h3>
+          <p class="text-2xl font-bold text-red-600"><%= abnormal_results %></p>
+        </div>
+      </div>
+
+      <!-- Reports Table -->
+      <div class="bg-white shadow rounded overflow-x-auto">
+        <table class="min-w-full table-auto">
+          <thead class="bg-green-700 text-white">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-medium">Patient</th>
+              <th class="px-6 py-3 text-left text-sm font-medium">Test Type</th>
+              <th class="px-6 py-3 text-left text-sm font-medium">Result</th>
+              <th class="px-6 py-3 text-left text-sm font-medium">Date</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-800">
+            <% if (reports.length > 0) { %> <% reports.forEach(report => { %>
+            <tr class="border-b hover:bg-gray-100">
+              <td class="px-6 py-4"><%= report.patient_name %></td>
+              <td class="px-6 py-4"><%= report.test_type %></td>
+              <td class="px-6 py-4"><%= report.result %></td>
+              <td class="px-6 py-4">
+                <%= new Date(report.created_at).toISOString().slice(0, 10) %>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                No reports found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
