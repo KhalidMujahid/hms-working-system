@@ -78,7 +78,9 @@ labRoutes.get("/reports", isLab, async (req, res) => {
 // GET /lab/requests
 labRoutes.get("/requests", isLab, async (req, res) => {
   try {
-    const requests = await LabRequest.find().sort({ requested_at: -1 });
+    const requests = await LabRequest.find()
+      .populate("patient_id")
+      .sort({ requested_at: -1 });
 
     res.render("lab/requests", {
       requests,

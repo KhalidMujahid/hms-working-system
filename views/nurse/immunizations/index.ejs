@@ -8,21 +8,29 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
   </head>
   <body class="bg-gray-100 p-6">
     <div class="max-w-6xl mx-auto">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">Routine Immunization Schedule</h1>
-        <a
-          href="/nurse/immunizations/new"
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"
-        >
-          <i class="fas fa-plus-circle mr-2"></i> Add New Schedule
-        </a>
+        <div class="flex space-x-2">
+          <a
+            href="/nurse/dashboard"
+            class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 flex items-center"
+          >
+            <i class="fas fa-home mr-2"></i> Go to Dashboard
+          </a>
+          <a
+            href="/nurse/immunizations/new"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"
+          >
+            <i class="fas fa-plus-circle mr-2"></i> Add New Schedule
+          </a>
+        </div>
       </div>
 
       <% if (immunizations.length === 0) { %>

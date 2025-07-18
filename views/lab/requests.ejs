@@ -69,7 +69,9 @@
         <tbody class="text-gray-800">
           <% requests.forEach(req => { %>
           <tr class="border-b hover:bg-gray-50">
-            <td class="px-6 py-4"><%= req.patient_name %></td>
+            <td class="px-6 py-4">
+              <%= req.patient_id.firstName %> <%= req.patient_id.lastName %>
+            </td>
             <td class="px-6 py-4"><%= req.test_type %></td>
             <td class="px-6 py-4">
               <%= new Date(req.requested_at).toISOString().slice(0, 10) %>

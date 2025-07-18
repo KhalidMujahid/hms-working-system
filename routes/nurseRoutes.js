@@ -183,13 +183,13 @@ nurseRoutes.get("/appointments", isNurse, async (req, res) => {
     const today = new Date().toISOString().split("T")[0];
 
     const appointments = await Appointment.find({ date: today })
-      .populate("patient_id", "firstName")
-      .populate("doctor_id", "username")
+      .populate("patient")
+      .populate("doctor", "username")
       .sort({ time: 1 });
 
     const formattedAppointments = appointments.map((a) => ({
-      patient_name: a.patient_id.firstName,
-      doctor_name: a.doctor_id.username,
+      patient_name: a.patient.firstName,
+      doctor_name: a.doctor.username,
       time: a.time,
       formattedTime: new Date(`1970-01-01T${a.time}Z`).toLocaleTimeString(
         "en-US",
@@ -218,7 +218,7 @@ nurseRoutes.get("/medications", isNurse, async (req, res) => {
     const today = new Date().toISOString().split("T")[0];
 
     const meds = await NurseMedication.find({ date: today })
-      .populate("patient_id", "firstName")
+      .populate("patient_id")
       .sort({ time: 1 });
 
     const medications = meds.map((m) => ({

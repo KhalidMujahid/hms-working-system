@@ -159,8 +159,6 @@ doctorRoutes.get("/view-patient/:id", ensureDoctor, async (req, res) => {
       doctor: r.doctor_id?.username || "Unknown",
     }));
 
-    console.log(prescriptions);
-
     res.render("doctor/view-patient", {
       patient: {
         ...patient.toObject(),
@@ -347,23 +345,45 @@ doctorRoutes.post("/prescriptions/create", ensureDoctor, async (req, res) => {
 });
 
 doctorRoutes.get("/lab-requests", ensureDoctor, async (req, res) => {
-  const doctorId = req.session.user._id;
+  const doctorId = req.session.userId;
 
   const results = await LabResult.find({ doctor_id: doctorId })
-    .populate("patient_id", "full_name")
+    .populate("patient_id")
     .sort({ date_requested: -1 });
+  const patients = await Appointment.find().populate("patient");
 
   const formattedResults = results.map((r) => ({
     id: r._id,
     patient_id: r.patient_id._id,
-    full_name: r.patient_id.full_name,
+    full_name: `${r.patient_id.firstName} ${r.patient_id.lastName}`,
     test_type: r.test_type,
     date_requested: r.date_requested.toLocaleDateString(),
     status: r.status,
     result: r.result || "",
   }));
 
-  res.render("doctor/lab-requests", { requests: formattedResults });
+  res.render("doctor/lab-requests", { requests: formattedResults, patients });
+});
+
+// POST /doctor/lab-request/send
+doctorRoutes.post("/doctor/lab-request/send", async (req, res) => {
+  try {
+    const { patient_id, test_type } = req.body;
+    const patient = await Patient.findById(patient_id);
+    if (!patient) return res.status(404).send("Patient not found");
+
+    const newRequest = new LabRequest({
+      patient_id,
+      test_type,
+      requested_at: new Date(),
+    });
+
+    await newRequest.save();
+    res.redirect("/doctor/lab-requests");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to send lab request");
+  }
 });
 
 // observation ROUTE
